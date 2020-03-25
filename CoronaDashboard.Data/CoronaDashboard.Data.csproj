@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\CoronaDashboard.Web\API_EN.POP.DNST_DS2_en_csv_v2_887474.csv" Link="API_EN.POP.DNST_DS2_en_csv_v2_887474.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\CoronaDashboard.Web\API_SP.POP.TOTL_DS2_en_csv_v2_887275.csv" Link="API_SP.POP.TOTL_DS2_en_csv_v2_887275.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Csv" Version="1.0.53" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="API_SP.POP.TOTL_DS2_en_csv_v2_887275.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
