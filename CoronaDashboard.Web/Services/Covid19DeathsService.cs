@@ -10,6 +10,7 @@ namespace CoronaDashboard.Web.Services
 	public class Covid19DeathsService: ICovid19DeathsService
 	{
 		public const int MIN_DEATHS = 10;
+		public const int MIN_DEATHS_MILLION = 1;
 		private const int MIN_POPULATION = 10000000;
 		private const int POPULATION_SCALE = 1000000;
 		private const int DENSITY_SCALE = 1;
@@ -41,7 +42,6 @@ namespace CoronaDashboard.Web.Services
 
 			List<CountrySerieViewModel> series = new List<CountrySerieViewModel>();
 
-			model.Countries.Sort();
 			foreach (var country in model.Countries)
 			{
 				List<int> ints = model.MapCountryDeaths[country];
@@ -49,14 +49,19 @@ namespace CoronaDashboard.Web.Services
 				List<double> data = ints.Select(i => (double)i).ToList();
 				double max = data.Max();
 
-				if (max > MIN_DEATHS)
+				PopulationCountry countryPop = _countryService.GetCountry(country);
+
+				if ((max > MIN_DEATHS) && (countryPop != null))
 				{
-					var item = new CountrySerieViewModel
+					if (countryPop.Population > MIN_POPULATION)
 					{
-						name = country,
-						data = data.Where(d => d > MIN_DEATHS).ToList()
-					};
-					series.Add(item);
+						var item = new CountrySerieViewModel
+						{
+							name = country,
+							data = data.Where(d => d > MIN_DEATHS).ToList()
+						};
+						series.Add(item);
+					}
 				}
 			}
 			return new PlotViewModel { Series = series, UpdateTime = model.UpdateTime };
@@ -68,19 +73,18 @@ namespace CoronaDashboard.Web.Services
 
 			List<CountrySerieViewModel> series = new List<CountrySerieViewModel>();
 
-			model.Countries.Sort();
 			foreach (var country in model.Countries)
 			{
-				List<int> ints = model.MapCountryDeaths[country];
-				double max = ints.Max();
+				List<int> deaths = model.MapCountryDeaths[country];
+				double maxDeaths = deaths.Max();
 
-				if (max > MIN_DEATHS)
+				if (maxDeaths > MIN_DEATHS)
 				{
-					List<double> data = new List<double>();
+					List<double> data = new List<double>(deaths.Count - 1);
 
-					for (int i = 0; i < ints.Count - 1; i++)
+					for (int i = 0; i < deaths.Count - 1; i++)
 					{
-						data.Add(ints[i + 1] - ints[i]);
+						data.Add(deaths[i + 1] - deaths[i]);
 					}
 
 					var item = new CountrySerieViewModel
@@ -96,24 +100,46 @@ namespace CoronaDashboard.Web.Services
 
 		public PlotViewModel GetRelativeViewModel(string option)
 		{
-			PlotViewModel model = GetAbsoluteDataViewModel();
-			List<CountrySerieViewModel> series = model.Series.ToList();
+			Covid19DeathsModel model = _repository.GetCovid19DeathsModel();
 
-			series.RemoveAll(item => _countryService.GetCountry(item.name).Population < MIN_POPULATION);
+			List<CountrySerieViewModel> series = new List<CountrySerieViewModel>();
 
-			var normalizationStrategy = _normalizationStrategyMap[option];
-
-			foreach (var item in series)
+			foreach (var country in model.Countries)
 			{
-				List<double> data = item.data;
-				PopulationCountry country = _countryService.GetCountry(item.name);
+				List<int> ints = model.MapCountryDeaths[country];
 
-				double scale = normalizationStrategy.Invoke(country);
+				List<double> data = ints.Select(i => (double)i).ToList();
+				double maxDeaths = data.Max();
 
-				for (int i = 0; i < data.Count; i++)
-					item.data[i] *= scale;
+				var normalizationStrategy = _normalizationStrategyMap[option];
+				PopulationCountry populationCountry = _countryService.GetCountry(country);
+
+				if ((maxDeaths > MIN_DEATHS) && (populationCountry != null))
+				{
+					if (populationCountry.Population > MIN_POPULATION)
+					{
+						double scale = normalizationStrategy.Invoke(populationCountry);
+						for (int i = 0; i < data.Count; i++)
+							data[i] *= scale;
+
+						var item = new CountrySerieViewModel
+						{
+							name = country,
+							data = data.Where(d => d > MIN_DEATHS_MILLION).ToList()
+						};
+						series.Add(item);
+					}
+				}
 			}
-			return model;
+			return new PlotViewModel { Series = series, UpdateTime = model.UpdateTime };
+		}
+
+		public ICovid19DeathsService ICovid19DeathsService
+		{
+			get => default(ICovid19DeathsService);
+			set
+			{
+			}
 		}
 	}
 }

@@ -31,5 +31,17 @@ namespace CoronaDashboard.Data.Tests
 			Assert.AreEqual((int)country.Population, 46723749);
 			Assert.AreNotEqual(93.5290582615872, 46723749, TOLERANCE);
 		}
+
+		[TestMethod]
+		public void TestCountryCode()
+		{
+			PopulationCountryRepositoryCsv repository = new PopulationCountryRepositoryCsv();
+
+			IEnumerable<PopulationCountry> data = repository.GetPopulationCountry();
+
+			var country = data.First(m => m.Name == "Spain");
+
+			Assert.AreEqual(country.IsoCode, "ESP");
+		}
 	}
 }

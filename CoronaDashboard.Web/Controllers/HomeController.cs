@@ -31,6 +31,7 @@ namespace CoronaDashboard.Web.Controllers
 			ViewData["YMin"] = 0;
 			ViewData["YType"] = "linear";
 			ViewData["YTickInterval"] = 100;
+			ViewData["XLabel"] = "Days from death 10";
 
 			return View("Plot", model);
 		}
@@ -44,6 +45,7 @@ namespace CoronaDashboard.Web.Controllers
 			ViewData["TooltipDecimals"] = 0;
 			ViewData["YMin"] = Covid19DeathsService.MIN_DEATHS;
 			ViewData["YType"] = option;
+			ViewData["XLabel"] = "Days from death 10";
 
 			if (option == "logarithmic")
 			{
@@ -64,9 +66,10 @@ namespace CoronaDashboard.Web.Controllers
 			ViewData["Title"] = "Relative";
 			ViewData["YLabel"] = "Deaths / "+ option;
 			ViewData["TooltipDecimals"] = 2;
-			ViewData["YMin"] = 0.01;
+			ViewData["YMin"] = 1;
 			ViewData["YType"] = "logarithmic";
 			ViewData["YTickInterval"] = 1;
+			ViewData["XLabel"] = "Days from 1 death / million";
 
 			return View("Plot", model);
 		}

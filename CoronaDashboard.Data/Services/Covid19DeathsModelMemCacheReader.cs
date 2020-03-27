@@ -3,28 +3,31 @@ using System.IO;
 
 namespace CoronaDashboard.Data
 {
-	public class Covid19DeathsModelFileCacheReader : ICovid19DeathsModelCacheReader
+	public class Covid19DeathsModelMemCacheReader : ICovid19DeathsModelCacheReader
 	{
-		public const string CACHE_FILE = "time_series_19-covid-Deaths.csv";
-		public const int EXPIRES_HOURS = 6;
+		public const int EXPIRES_HOURS = 4;
 
 		ICovid19DeathsModelReader _reader = new Covid19DeathsModelDowloader();
+		string _data;
+		DateTime _updateTime;
 
-		public Covid19DeathsModelFileCacheReader(ICovid19DeathsModelReader reader)
+		public Covid19DeathsModelMemCacheReader(ICovid19DeathsModelReader reader)
 		{
 			_reader = reader;
+			_data = null;
 		}
 
 		protected override void CacheWrite(string data)
 		{
-			File.WriteAllText(CACHE_FILE, data);
+			_data = data;
+			_updateTime = DateTime.Now;
 		}
 
 		protected override bool CacheExits()
 		{
-			if (File.Exists(CACHE_FILE))
+			if (_data != null)
 			{
-				TimeSpan age = DateTime.Now - File.GetLastWriteTime(CACHE_FILE);
+				TimeSpan age = DateTime.Now - _updateTime;
 				if (age.TotalHours < EXPIRES_HOURS)
 					return true;
 			}
@@ -33,7 +36,7 @@ namespace CoronaDashboard.Data
 
 		public override void CacheInvalidate()
 		{
-			File.Delete(CACHE_FILE);
+			_data = null;
 		}
 
 		protected override string ReadData()
@@ -43,7 +46,7 @@ namespace CoronaDashboard.Data
 
 		protected override string CacheRead()
 		{
-			return File.ReadAllText(CACHE_FILE);
+			return _data;
 		}
 	}
 }

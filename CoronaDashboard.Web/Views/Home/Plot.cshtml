@@ -26,6 +26,9 @@
 
 		chart: {
 			height: 600,
+			zoomType: "xy",
+			panning: true,
+			panKey: 'shift'
 		},
 		tooltip: {
 			pointFormat: '{series.name}: <b>{point.y:.@ViewData["TooltipDecimals"]f}</b><br/>',
@@ -46,7 +49,7 @@
 
 		subtitle: {
 			useHTML: true,
-			text: 'Source:  <a href=" https://github.com/CSSEGISandData/COVID-19">CSSEGISandData</a> (@Model.UpdateTime.ToString("s"))'
+			text: 'Data source: <a href=" https://github.com/CSSEGISandData/COVID-19">CSSEGISandData</a> (@Model.UpdateTime.ToString("u"))'
 		},
 
 		yAxis: {
@@ -62,7 +65,7 @@
 		xAxis: {
 			allowDecimals: false,
 			title: {
-				text: 'Days from death 10'
+				text: '@Html.Raw(ViewData["XLabel"])'
 			}
 		},
 

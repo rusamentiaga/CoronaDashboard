@@ -65,6 +65,8 @@ namespace CoronaDashboard.Data
 						model.MapCountryDeaths[country][i - FIRST_COL_DATE] += Int32.Parse(deaths);
 				}
 			}
+			model.Countries.Sort();
+
 			return model;
 		}
 	}

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CoronaDashboard.Web.Services
 {
-	public class PopulationCountryService: IPopulationCountryService
+	public class PopulationCountryService : IPopulationCountryService
 	{
 		ICollection<PopulationCountry> _countries;
 		Dictionary<string, string> _alternativesNames;
@@ -35,7 +35,7 @@ namespace CoronaDashboard.Web.Services
 				if (_alternativesNames.ContainsKey(name))
 					return GetCountry(_alternativesNames[name]);
 				else
-					return new PopulationCountry { Name = name, Population = 1, DensityPeoplePerSquareKm = 1 };
+					return null;
 			}
 
 			return popArray.First();

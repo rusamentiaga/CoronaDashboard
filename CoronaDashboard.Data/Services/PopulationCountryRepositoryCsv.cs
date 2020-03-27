@@ -15,6 +15,7 @@ namespace CoronaDashboard.Data
 		class CountryData
 		{
 			public string Name { get; set; }
+			public string IsoCode { get; set; }
 			public double Data { get; set; }
 		}
 
@@ -39,6 +40,7 @@ namespace CoronaDashboard.Data
 					CountryData item = new CountryData
 					{
 						Name = line[0].Trim('"'),
+						IsoCode = line[1].Trim('"'),
 						Data = Double.Parse(line[validIndex].Trim('"'))
 					};
 					data.Add(item);
@@ -48,6 +50,7 @@ namespace CoronaDashboard.Data
 					CountryData item = new CountryData
 					{
 						Name = line[0].Trim('"'),
+						IsoCode = line[1].Trim('"'),
 						Data = Double.NaN
 					};
 					data.Add(item);
@@ -71,6 +74,7 @@ namespace CoronaDashboard.Data
 				PopulationCountry item = new PopulationCountry
 				{
 					Name = sourcePopulation[i].Name,
+					IsoCode = sourcePopulation[i].IsoCode,
 					Population = sourcePopulation[i].Data,
 					DensityPeoplePerSquareKm = sourceDensity[i].Data
 				};

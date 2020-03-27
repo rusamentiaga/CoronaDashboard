@@ -31,7 +31,7 @@ namespace CoronaDashboard.Data.Tests
 			Covid19DeathsModelFileCacheReader reader = new Covid19DeathsModelFileCacheReader(new Covid19DeathsModelDowloader());
 
 			string data = reader.GetCovid19Deaths();
-			reader.CleanCache();
+			reader.CacheInvalidate();
 			Assert.IsFalse(File.Exists(Covid19DeathsModelFileCacheReader.CACHE_FILE));
 		}
 
@@ -40,14 +40,14 @@ namespace CoronaDashboard.Data.Tests
 		{
 			Covid19DeathsModelFileCacheReader reader = new Covid19DeathsModelFileCacheReader(new Covid19DeathsModelDowloader());
 
-			reader.CleanCache();
+			reader.CacheInvalidate();
 			string data = reader.GetCovid19Deaths();
 			Assert.IsFalse(reader.CacheHit);
 
 			data = reader.GetCovid19Deaths();
 			Assert.IsTrue(reader.CacheHit);
 
-			reader.CleanCache();
+			reader.CacheInvalidate();
 			data = reader.GetCovid19Deaths();
 			Assert.IsFalse(reader.CacheHit);
 		}
@@ -57,7 +57,7 @@ namespace CoronaDashboard.Data.Tests
 		{
 			Covid19DeathsModelFileCacheReader reader = new Covid19DeathsModelFileCacheReader(new Covid19DeathsModelDowloader());
 
-			reader.CleanCache();
+			reader.CacheInvalidate();
 			string data = reader.GetCovid19Deaths();
 			Assert.IsFalse(reader.CacheHit);
 
