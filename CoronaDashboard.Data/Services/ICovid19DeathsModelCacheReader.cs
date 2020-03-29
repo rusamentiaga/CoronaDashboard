@@ -10,21 +10,27 @@
 		protected abstract bool CacheExits();
 		public abstract void CacheInvalidate();
 
+		private readonly object cacheLock = new object();
+
 		public string GetCovid19Deaths()
 		{
 			string data;
 
-			if (CacheExits())
+			lock (cacheLock)
 			{
-				data = CacheRead();
-				CacheHit = true;
+				if (CacheExits())
+				{
+					data = CacheRead();
+					CacheHit = true;
+				}
+				else
+				{
+					data = ReadData();
+					CacheWrite(data);
+					CacheHit = false;
+				}
 			}
-			else
-			{
-				data = ReadData();
-				CacheWrite(data);
-				CacheHit = false;
-			}
+
 			return data;
 		}
 	}
