@@ -64,7 +64,7 @@ namespace CoronaDashboard.Web
 			{
 				routes.MapRoute(
 					name: "default",
-					template: "{controller=Home}/{action=Absolute}/{option?}");
+					template: "{controller=Home}/{action=Relative}/{option?}");
 			});
 		}
 	}

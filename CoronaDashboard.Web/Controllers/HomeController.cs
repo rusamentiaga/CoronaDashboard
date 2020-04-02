@@ -59,7 +59,7 @@ namespace CoronaDashboard.Web.Controllers
 			return View("Plot", model);
 		}
 
-		public IActionResult Relative(string option)
+		public IActionResult Relative(string option = Covid19DeathsService.NORM_POPULATION)
 		{
 			PlotViewModel model = _covidService.GetRelativeViewModel(option);
 
