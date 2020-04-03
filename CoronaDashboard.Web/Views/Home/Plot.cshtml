@@ -14,7 +14,8 @@
 </figure>
 
 <script>
-	colorpal = palette('mpn65', @Model.Series.Count);
+	let numcolorspal = Math.min(@Model.Series.Count, 65);
+	colorpal = palette('mpn65', numcolorspal);
 
 	for (let i = 0; i < colorpal.length; i++) {
 		colorpal[i] = '#' + colorpal[i];
