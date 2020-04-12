@@ -13,6 +13,11 @@
 	<div id="plot"></div>
 </figure>
 
+@{ 
+	double hours = (DateTime.UtcNow - Model.UpdateTime).TotalHours;
+	string hoursStr = String.Format("{0:0.0}", hours);
+}
+
 <script>
 	let numcolorspal = Math.min(@Model.Series.Count, 65);
 	colorpal = palette('mpn65', numcolorspal);
@@ -50,7 +55,7 @@
 
 		subtitle: {
 			useHTML: true,
-			text: 'Data source: <a href=" https://github.com/CSSEGISandData/COVID-19">CSSEGISandData</a> (@Model.UpdateTime.ToString("u"))'
+			text: 'Data source: <a href=" https://github.com/CSSEGISandData/COVID-19">CSSEGISandData</a> (@Model.UpdateTime.ToString("u"), @hoursStr hours ago)'
 		},
 
 		yAxis: {
