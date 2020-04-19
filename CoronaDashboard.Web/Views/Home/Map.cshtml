@@ -1,0 +1,118 @@
+﻿@model CoronaDashboard.Web.Models.MapViewModel
+@using Newtonsoft.Json;
+
+@{
+	ViewData["Title"] = "Map";
+}
+
+<script src="https://code.highcharts.com/maps/highmaps.js"></script>
+<script src="https://code.highcharts.com/maps/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/mapdata/custom/world.js"></script>
+
+<div id="map"></div>
+
+@{
+	double hours = (DateTime.UtcNow - Model.UpdateTime).TotalHours;
+	string hoursStr = String.Format("{0:0.0}", hours);
+}
+
+<script type="text/javascript">
+
+/*
+	// Prepare demo data
+	// Data is joined to map using value of 'hc-key' property by default.
+	// See API docs for 'joinBy' for more info on linking data and map.
+	var data =
+		[
+			{
+				"code3": "ESP",
+				"value": 582.34,
+			},
+			{
+				"code3": "AFG",
+				"value": 53.08,
+			}
+		]
+*/
+
+	// Create the chart
+	Highcharts.mapChart('map', {
+		chart: {
+			map: 'custom/world'
+		},
+
+		title: {
+			text: 'Coronavirus deaths / million'
+		},
+
+		subtitle: {
+			useHTML: true,
+			text: 'Data source: <a href=" https://github.com/CSSEGISandData/COVID-19">CSSEGISandData</a> (@Model.UpdateTime.ToString("u"), @hoursStr hours ago)'
+		},
+
+		mapNavigation: {
+			enabled: true,
+			buttonOptions: {
+				verticalAlign: 'bottom'
+			}
+		},
+
+		colorAxis: {
+			type: 'logarithmic',
+			/*
+			stops: [
+				[0, '#6da5ff'],
+				[0.6, '#ffff00'],
+				[1, '#ff5500']
+			]*/
+			/*
+			stops: [
+				[0, '#EFEFFF'],
+				[0.5, Highcharts.getOptions().colors[0]],
+				[1, Highcharts.color(Highcharts.getOptions().colors[0]).brighten(-0.5).get()]
+			]*/
+			stops: [
+				[0, '#3060cf'],
+				[0.5, '#fffbbc'],
+				[0.9, '#c4463a']
+			]
+		},
+		/*
+		colorAxis: {
+			stops: [
+				[0, '#173f5f'],
+				[0.25, '#20639b'],
+				[0.5, '#3caea3'],
+				[0.75, '#3d553b'],
+				[1, '#3d553b']
+			]
+		},*/
+		credits: {
+			enabled: false
+		},
+
+		exporting: {
+			enabled: false
+		},
+		tooltip: {
+			pointFormat: '{point.name}: <b>{point.value:.2f}</b>',
+			shared: false
+		},
+
+		series: [{
+			joinBy: ['iso-a3', 'code3'],
+			data: @Html.Raw(JsonConvert.SerializeObject(Model.Data)),
+			name: 'Deaths per million',
+			states: {
+				hover: {
+					color: '#BADA55'
+				}
+			},
+			dataLabels: {
+				enabled: false,
+				format: '{point.name}'
+			}
+		}]
+	});
+
+</script>

@@ -134,12 +134,31 @@ namespace CoronaDashboard.Web.Services
 			return new PlotViewModel { Series = series, UpdateTime = model.UpdateTime };
 		}
 
-		public ICovid19DeathsService ICovid19DeathsService
+		public MapViewModel GetMapViewModel()
 		{
-			get => default(ICovid19DeathsService);
-			set
+			PlotViewModel relativeModel = GetRelativeViewModel(NORM_POPULATION);
+			List<MapCountryCodeModel> series = new List<MapCountryCodeModel>();
+
+			foreach (var itemRelative in relativeModel.Series)
 			{
+				PopulationCountry populationCountry = _countryService.GetCountry(itemRelative.name);
+				if ( (populationCountry != null) && (itemRelative.data.Count >0) )
+				{
+					var itemMapModel = new MapCountryCodeModel
+					{
+						code3 = populationCountry.IsoCode,
+						value = itemRelative.data[itemRelative.data.Count-1]
+					};
+					series.Add(itemMapModel);
+				}
 			}
+
+			return new MapViewModel
+			{
+				UpdateTime = relativeModel.UpdateTime,
+				Data = series
+			};
+
 		}
 	}
 }

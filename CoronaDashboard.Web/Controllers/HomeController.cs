@@ -21,6 +21,13 @@ namespace CoronaDashboard.Web.Controllers
 			_covidService = covidService;
 		}
 
+		public IActionResult Map()
+		{
+			MapViewModel model = _covidService.GetMapViewModel();
+
+			return View(model);
+		}
+
 		public IActionResult Growth(string option)
 		{
 			PlotViewModel model = _covidService.GetGrowthViewModel();

@@ -45,3 +45,8 @@ body {
 		table-layout: fixed;
 	}
 }
+
+#map {
+	height: 600px;
+	margin: 0 auto;
+}
