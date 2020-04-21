@@ -20,6 +20,17 @@ namespace CoronaDashboard.Web.Services
 			_alternativesNames["US"] = "United States";
 			_alternativesNames["Korea, South"] = "Korea, Rep.";
 			_alternativesNames["Egypt"] = "Egypt, Arab Rep.";
+			_alternativesNames["Russia"] = "Russian Federation";
+			_alternativesNames["Bahamas"] = "Bahamas, The";
+			_alternativesNames["Gambia"] = "Gambia, The";
+			_alternativesNames["Brunei"] = "Brunei Darussalam";
+			_alternativesNames["Czechia"] = "Czech Republic";
+			_alternativesNames["Kyrgyzstan"] = "Kyrgyz Republic";
+			_alternativesNames["Laos"] = "Lao PDR";
+			_alternativesNames["Slovakia"] = "Slovak Republic";
+			_alternativesNames["Syria"] = "Syrian Arab Republic";
+			_alternativesNames["Venezuela"] = "Venezuela, RB";
+			_alternativesNames["Yemen"] = "Yemen, Rep.";
 		}
 
 		public PopulationCountry GetCountry(string name)

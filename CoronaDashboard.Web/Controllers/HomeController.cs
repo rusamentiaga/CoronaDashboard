@@ -21,9 +21,9 @@ namespace CoronaDashboard.Web.Controllers
 			_covidService = covidService;
 		}
 
-		public IActionResult Map()
+		public IActionResult Map(string option)
 		{
-			MapViewModel model = _covidService.GetMapViewModel();
+			MapViewModel model = _covidService.GetMapViewModel(option);
 
 			return View(model);
 		}
@@ -68,7 +68,7 @@ namespace CoronaDashboard.Web.Controllers
 
 		public IActionResult Relative(string option = Covid19DeathsService.NORM_POPULATION)
 		{
-			PlotViewModel model = _covidService.GetRelativeViewModel(option);
+			PlotViewModel model = _covidService.GetRelativeViewModel(option, Covid19DeathsService.MIN_DEATHS_MILLION);
 
 			ViewData["Title"] = "Relative";
 			ViewData["YLabel"] = "Deaths / "+ option;

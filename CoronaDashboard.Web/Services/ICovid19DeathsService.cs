@@ -6,8 +6,8 @@ namespace CoronaDashboard.Web.Services
 	public interface ICovid19DeathsService
 	{
 		PlotViewModel GetAbsoluteDataViewModel();
-		PlotViewModel GetRelativeViewModel(string option);
+		PlotViewModel GetRelativeViewModel(string option, int minDeaths);
 		PlotViewModel GetGrowthViewModel();
-		MapViewModel GetMapViewModel();
+		MapViewModel GetMapViewModel(string option);
 	}
 }

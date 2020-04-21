@@ -98,7 +98,7 @@ namespace CoronaDashboard.Web.Services
 			return new PlotViewModel { Series = series, UpdateTime = model.UpdateTime };
 		}
 
-		public PlotViewModel GetRelativeViewModel(string option)
+		public PlotViewModel GetRelativeViewModel(string option, int minDeathsValue = MIN_DEATHS_MILLION)
 		{
 			Covid19DeathsModel model = _repository.GetCovid19DeathsModel();
 
@@ -125,18 +125,19 @@ namespace CoronaDashboard.Web.Services
 						var item = new CountrySerieViewModel
 						{
 							name = country,
-							data = data.Where(d => d > MIN_DEATHS_MILLION).ToList()
+							data = data.Where(d => d > minDeathsValue).ToList()
 						};
-						series.Add(item);
+						if (data.Count > 0)
+							series.Add(item);
 					}
 				}
 			}
 			return new PlotViewModel { Series = series, UpdateTime = model.UpdateTime };
 		}
 
-		public MapViewModel GetMapViewModel()
+		public MapViewModel GetMapViewModel(string option)
 		{
-			PlotViewModel relativeModel = GetRelativeViewModel(NORM_POPULATION);
+			PlotViewModel relativeModel = GetRelativeViewModel(option, 0);
 			List<MapCountryCodeModel> series = new List<MapCountryCodeModel>();
 
 			foreach (var itemRelative in relativeModel.Series)
