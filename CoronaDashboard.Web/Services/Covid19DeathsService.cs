@@ -78,7 +78,9 @@ namespace CoronaDashboard.Web.Services
 				List<int> deaths = model.MapCountryDeaths[country];
 				double maxDeaths = deaths.Max();
 
-				if (maxDeaths > MIN_DEATHS)
+				deaths = deaths.Where(d => d > MIN_DEATHS).ToList();
+
+				if ((maxDeaths > MIN_DEATHS) && (deaths.Count > 1))
 				{
 					List<double> data = new List<double>(deaths.Count - 1);
 
@@ -150,7 +152,9 @@ namespace CoronaDashboard.Web.Services
 				var normalizationStrategy = _normalizationStrategyMap[option];
 				PopulationCountry populationCountry = _countryService.GetCountry(country);
 
-				if ((maxDeaths > MIN_DEATHS) && (populationCountry != null) && (deathsCountry.Count > 0))
+				deathsCountry = deathsCountry.Where(d => d > MIN_DEATHS).ToList();
+
+				if ((maxDeaths > MIN_DEATHS) && (populationCountry != null) && (deathsCountry.Count > 1))
 				{
 					if (populationCountry.Population > MIN_POPULATION)
 					{
@@ -169,7 +173,7 @@ namespace CoronaDashboard.Web.Services
 						var item = new CountrySerieViewModel
 						{
 							name = country,
-							data = dataRelative.ToList()
+							data = dataRelative
 						};
 						if (dataRelative.Count > 0)
 							series.Add(item);
