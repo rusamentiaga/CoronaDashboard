@@ -9,5 +9,6 @@ namespace CoronaDashboard.Web.Services
 		PlotViewModel GetRelativeViewModel(string option, int minDeaths);
 		PlotViewModel GetGrowthViewModel();
 		MapViewModel GetMapViewModel(string option);
+		PlotViewModel GetRelativeGrowthViewModel(string option, int minDeathsValue);
 	}
 }

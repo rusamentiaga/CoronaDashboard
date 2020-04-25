@@ -43,6 +43,22 @@ namespace CoronaDashboard.Web.Controllers
 			return View("Plot", model);
 		}
 
+		public IActionResult GrowthRelative(string option)
+		{
+			PlotViewModel model = _covidService.GetRelativeGrowthViewModel(option,
+				Covid19DeathsService.MIN_DEATHS_MILLION);
+
+			ViewData["Title"] = "Growth relative";
+			ViewData["YLabel"] = "Increase of deaths / million";
+			ViewData["TooltipDecimals"] = 1;
+			ViewData["YMin"] = 0;
+			ViewData["YType"] = "linear";
+			ViewData["YTickInterval"] = 10;
+			ViewData["XLabel"] = "Days from death 10";
+
+			return View("Plot", model);
+		}
+
 		public IActionResult Absolute(string option)
 		{
 			PlotViewModel model = _covidService.GetAbsoluteDataViewModel();

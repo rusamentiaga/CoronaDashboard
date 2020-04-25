@@ -106,10 +106,10 @@ namespace CoronaDashboard.Web.Services
 
 			foreach (var country in model.Countries)
 			{
-				List<int> ints = model.MapCountryDeaths[country];
+				List<int> deathsCountryInt = model.MapCountryDeaths[country];
 
-				List<double> data = ints.Select(i => (double)i).ToList();
-				double maxDeaths = data.Max();
+				List<double> deathsCountry = deathsCountryInt.Select(i => (double)i).ToList();
+				double maxDeaths = deathsCountry.Max();
 
 				var normalizationStrategy = _normalizationStrategyMap[option];
 				PopulationCountry populationCountry = _countryService.GetCountry(country);
@@ -119,15 +119,59 @@ namespace CoronaDashboard.Web.Services
 					if (populationCountry.Population > MIN_POPULATION)
 					{
 						double scale = normalizationStrategy.Invoke(populationCountry);
-						for (int i = 0; i < data.Count; i++)
-							data[i] *= scale;
+						for (int i = 0; i < deathsCountry.Count; i++)
+							deathsCountry[i] *= scale;
 
 						var item = new CountrySerieViewModel
 						{
 							name = country,
-							data = data.Where(d => d > minDeathsValue).ToList()
+							data = deathsCountry.Where(d => d > minDeathsValue).ToList()
 						};
-						if (data.Count > 0)
+						if (deathsCountry.Count > 0)
+							series.Add(item);
+					}
+				}
+			}
+			return new PlotViewModel { Series = series, UpdateTime = model.UpdateTime };
+		}
+
+		public PlotViewModel GetRelativeGrowthViewModel(string option, int minDeathsValue = MIN_DEATHS_MILLION)
+		{
+			Covid19DeathsModel model = _repository.GetCovid19DeathsModel();
+
+			List<CountrySerieViewModel> series = new List<CountrySerieViewModel>();
+
+			foreach (var country in model.Countries)
+			{
+				List<int> deathsCountry = model.MapCountryDeaths[country];
+
+				double maxDeaths = deathsCountry.Max();
+
+				var normalizationStrategy = _normalizationStrategyMap[option];
+				PopulationCountry populationCountry = _countryService.GetCountry(country);
+
+				if ((maxDeaths > MIN_DEATHS) && (populationCountry != null) && (deathsCountry.Count > 0))
+				{
+					if (populationCountry.Population > MIN_POPULATION)
+					{
+						double scale = normalizationStrategy.Invoke(populationCountry);
+
+						List<double> dataRelative = new List<double>(deathsCountry.Count - 1);
+
+						for (int i = 0; i < deathsCountry.Count - 1; i++)
+						{
+							dataRelative.Add(deathsCountry[i + 1] - deathsCountry[i]);
+						}
+
+						for (int i = 0; i < dataRelative.Count; i++)
+							dataRelative[i] *= scale;
+
+						var item = new CountrySerieViewModel
+						{
+							name = country,
+							data = dataRelative.ToList()
+						};
+						if (dataRelative.Count > 0)
 							series.Add(item);
 					}
 				}

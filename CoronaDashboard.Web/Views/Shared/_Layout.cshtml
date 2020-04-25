@@ -28,9 +28,6 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<!--
-	<a asp-area="" asp-controller="Home" asp-action="Absolute" asp-route-option='linear' class="navbar-brand">CoronaDashboard</a>
-		-->
 			</div>
             <div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
@@ -39,6 +36,7 @@
 					<li><a asp-area="" asp-controller="Home" asp-action="Relative" asp-route-option='@Covid19DeathsService.NORM_POPULATION'>Relative log (population)</a></li>
 					<li><a asp-area="" asp-controller="Home" asp-action="Relative" asp-route-option='@Covid19DeathsService.NORM_DENSITY'>Relative log (density)</a></li>
 					<li><a asp-area="" asp-controller="Home" asp-action="Growth" asp-route-option='linear'>Growth</a></li>
+					<li><a asp-area="" asp-controller="Home" asp-action="GrowthRelative" asp-route-option='@Covid19DeathsService.NORM_POPULATION'>Growth (population)</a></li>
 					<li><a asp-area="" asp-controller="Home" asp-action="Map" asp-route-option='@Covid19DeathsService.NORM_POPULATION'>Map</a></li>
 				</ul>
             </div>
