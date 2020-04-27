@@ -31,12 +31,14 @@
 			</div>
             <div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
-					<li><a asp-area="" asp-controller="Home" asp-action="Absolute" asp-route-option='linear'>Absolute linear</a></li>
-					<li><a asp-area="" asp-controller="Home" asp-action="Absolute" asp-route-option='logarithmic'>Absolute log</a></li>
-					<li><a asp-area="" asp-controller="Home" asp-action="Relative" asp-route-option='@Covid19DeathsService.NORM_POPULATION'>Relative log (population)</a></li>
-					<li><a asp-area="" asp-controller="Home" asp-action="Relative" asp-route-option='@Covid19DeathsService.NORM_DENSITY'>Relative log (density)</a></li>
-					<li><a asp-area="" asp-controller="Home" asp-action="Growth" asp-route-option='linear'>Growth</a></li>
-					<li><a asp-area="" asp-controller="Home" asp-action="GrowthRelative" asp-route-option='@Covid19DeathsService.NORM_POPULATION'>Growth (population)</a></li>
+					<li><a asp-area="" asp-controller="Home" asp-action="Absolute" asp-route-option='linear'>Deaths</a></li>
+					<!--
+	<li><a asp-area="" asp-controller="Home" asp-action="Absolute" asp-route-option='logarithmic'>Absolute log</a></li>
+		-->
+					<li><a asp-area="" asp-controller="Home" asp-action="Relative" asp-route-option='@Covid19DeathsService.NORM_POPULATION'>Deaths / population</a></li>
+					<li><a asp-area="" asp-controller="Home" asp-action="Relative" asp-route-option='@Covid19DeathsService.NORM_DENSITY'>Deaths / density</a></li>
+					<li><a asp-area="" asp-controller="Home" asp-action="Growth" asp-route-option='linear'>Deaths per day</a></li>
+					<li><a asp-area="" asp-controller="Home" asp-action="GrowthRelative" asp-route-option='@Covid19DeathsService.NORM_POPULATION'>Deaths per day / population</a></li>
 					<li><a asp-area="" asp-controller="Home" asp-action="Map" asp-route-option='@Covid19DeathsService.NORM_POPULATION'>Map</a></li>
 				</ul>
             </div>

@@ -5,11 +5,17 @@
 	ViewData["Title"] = "Map";
 }
 
+<script src="https://code.jquery.com/jquery-1.11.3.js"
+		integrity="sha256-IGWuzKD7mwVnNY01LtXxq3L84Tm/RJtNCYBfXZw3Je0="
+		crossorigin="anonymous"></script>
 <script src="https://code.highcharts.com/maps/highmaps.js"></script>
 <script src="https://code.highcharts.com/maps/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/mapdata/custom/world.js"></script>
 
 <div id="map"></div>
+
+<button id="linear">Linear</button>
+<button id="logarithmic">Logarithmic</button>
 
 @{
 	double hours = (DateTime.UtcNow - Model.UpdateTime).TotalHours;
@@ -36,7 +42,7 @@
 */
 
 	// Create the chart
-	Highcharts.mapChart('map', {
+	var chart = Highcharts.mapChart('map', {
 		chart: {
 			map: 'custom/world'
 		},
@@ -124,6 +130,28 @@
 				format: '{point.name}'
 			}
 		}]
+	});
+
+	$('#linear').click(function () {
+		chart.update({
+			colorAxis: {
+				type: 'linear'
+			},
+			subtitle: {
+				//text: 'Lin'
+			}
+		});
+	});
+
+	$('#logarithmic').click(function () {
+		chart.update({
+			colorAxis: {
+				type: 'logarithmic'
+			},
+			subtitle: {
+				//text: 'Log'
+			}
+		});
 	});
 
 </script>

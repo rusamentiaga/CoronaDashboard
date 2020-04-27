@@ -3,6 +3,9 @@
 
 <script src="~/js/palette.js"></script>
 
+<script src="https://code.jquery.com/jquery-1.11.3.js"
+		integrity="sha256-IGWuzKD7mwVnNY01LtXxq3L84Tm/RJtNCYBfXZw3Je0="
+		crossorigin="anonymous"></script>
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/series-label.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
@@ -13,7 +16,10 @@
 	<div id="plot"></div>
 </figure>
 
-@{ 
+<button id="linear">Linear</button>
+<button id="logarithmic">Logarithmic</button>
+
+@{
 	double hours = (DateTime.UtcNow - Model.UpdateTime).TotalHours;
 	string hoursStr = String.Format("{0:0.0}", hours);
 }
@@ -26,7 +32,7 @@
 		colorpal[i] = '#' + colorpal[i];
 	}
 
-	Highcharts.chart('plot', {
+	var chart = Highcharts.chart('plot', {
 
 		colors: colorpal,
 
@@ -59,10 +65,10 @@
 		},
 
 		yAxis: {
-			min: @ViewData["YMin"],
+			//min: @ViewData["YMin"],
 			type: '@ViewData["YType"]',
-			tickInterval: @ViewData["YTickInterval"],
-			minorTickInterval: 0.1,
+			//tickInterval: @ViewData["YTickInterval"],
+			//minorTickInterval: 0.1,
 			title: {
 				text: '@Html.Raw(ViewData["YLabel"])'
 			}
@@ -107,4 +113,28 @@
 			}]
 		}
 	});
+
+
+	$('#linear').click(function () {
+		chart.update({
+			yAxis: {
+				type: 'linear'
+			},
+			subtitle: {
+				//text: 'Lin'
+			}
+		});
+	});
+
+	$('#logarithmic').click(function () {
+		chart.update({
+			yAxis: {
+				type: 'logarithmic'
+			},
+			subtitle: {
+				//text: 'Log'
+			}
+		});
+	});
+
 </script>

@@ -33,9 +33,9 @@ namespace CoronaDashboard.Web.Controllers
 			PlotViewModel model = _covidService.GetGrowthViewModel();
 
 			ViewData["Title"] = "Growth";
-			ViewData["YLabel"] = "Increase of deaths";
+			ViewData["YLabel"] = "Deaths per day";
 			ViewData["TooltipDecimals"] = 0;
-			ViewData["YMin"] = 0;
+			ViewData["YMin"] = 0.1;
 			ViewData["YType"] = "linear";
 			ViewData["YTickInterval"] = 100;
 			ViewData["XLabel"] = "Days from death 10";
@@ -49,7 +49,7 @@ namespace CoronaDashboard.Web.Controllers
 				Covid19DeathsService.MIN_DEATHS_MILLION);
 
 			ViewData["Title"] = "Growth relative";
-			ViewData["YLabel"] = "Increase of deaths / million";
+			ViewData["YLabel"] = "Deaths per day / million";
 			ViewData["TooltipDecimals"] = 1;
 			ViewData["YMin"] = 0;
 			ViewData["YType"] = "linear";
@@ -90,7 +90,7 @@ namespace CoronaDashboard.Web.Controllers
 			ViewData["YLabel"] = "Deaths / "+ option;
 			ViewData["TooltipDecimals"] = 2;
 			ViewData["YMin"] = 1;
-			ViewData["YType"] = "logarithmic";
+			ViewData["YType"] = "linear";
 			ViewData["YTickInterval"] = 1;
 			ViewData["XLabel"] = "Days from 1 death / million";
 
