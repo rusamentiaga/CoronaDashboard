@@ -16,8 +16,14 @@
 	<div id="plot"></div>
 </figure>
 
-<button id="linear">Linear</button>
-<button id="logarithmic">Logarithmic</button>
+<div id="ChartType" class="btn-group btn-group-toggle" data-toggle="buttons">
+	<label class="btn active">
+		<input type="radio" name="mode" id="linearRadio" checked> Linear
+	</label>
+	<label class="btn">
+		<input type="radio" name="mode" id="logarithmicRadio"> Logarithmic
+	</label>
+</div>
 
 @{
 	double hours = (DateTime.UtcNow - Model.UpdateTime).TotalHours;
@@ -114,27 +120,25 @@
 		}
 	});
 
-
-	$('#linear').click(function () {
+	function ChangeChartType(option) {
 		chart.update({
 			yAxis: {
-				type: 'linear'
-			},
-			subtitle: {
-				//text: 'Lin'
+				type: option
 			}
 		});
-	});
+	}
 
-	$('#logarithmic').click(function () {
-		chart.update({
-			yAxis: {
-				type: 'logarithmic'
-			},
-			subtitle: {
-				//text: 'Log'
-			}
-		});
+	$("#ChartType .btn").on('click', function () {
+
+		$(this).parent().children().removeClass('active');
+		$(this).addClass('active');
+
+		ChangeChartType($(this).text().toLowerCase().trim());
+
+		//console.log($(this).text().toLowerCase().trim());
+
+		//console.log(this); // points to the clicked input button
+
 	});
 
 </script>
