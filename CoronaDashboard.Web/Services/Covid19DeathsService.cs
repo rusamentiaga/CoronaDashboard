@@ -11,7 +11,7 @@ namespace CoronaDashboard.Web.Services
 	{
 		public const int MIN_DEATHS = 10;
 		public const int MIN_DEATHS_MILLION = 1;
-		private const int MIN_POPULATION = 10000000;
+		private const int MIN_POPULATION = 100000;
 		private const int POPULATION_SCALE = 1000000;
 		private const int DENSITY_SCALE = 1;
 
@@ -49,7 +49,7 @@ namespace CoronaDashboard.Web.Services
 				List<double> data = ints.Select(i => (double)i).ToList();
 				double max = data.Max();
 
-				PopulationCountry countryPop = _countryService.GetCountry(country);
+				PopulationCountry countryPop = _countryService.GetCountry(country, model.GetCountryIsoCode(country));
 
 				if ((max > MIN_DEATHS) && (countryPop != null))
 				{
@@ -114,7 +114,7 @@ namespace CoronaDashboard.Web.Services
 				double maxDeaths = deathsCountry.Max();
 
 				var normalizationStrategy = _normalizationStrategyMap[option];
-				PopulationCountry populationCountry = _countryService.GetCountry(country);
+				PopulationCountry populationCountry = _countryService.GetCountry(country, model.GetCountryIsoCode(country));
 
 				if ((maxDeaths > MIN_DEATHS) && (populationCountry != null))
 				{
@@ -150,7 +150,7 @@ namespace CoronaDashboard.Web.Services
 				double maxDeaths = deathsCountry.Max();
 
 				var normalizationStrategy = _normalizationStrategyMap[option];
-				PopulationCountry populationCountry = _countryService.GetCountry(country);
+				PopulationCountry populationCountry = _countryService.GetCountry(country, model.GetCountryIsoCode(country));
 
 				deathsCountry = deathsCountry.Where(d => d > MIN_DEATHS).ToList();
 
@@ -185,13 +185,14 @@ namespace CoronaDashboard.Web.Services
 
 		public MapViewModel GetMapViewModel(string option)
 		{
+			Covid19DeathsModel model = _repository.GetCovid19DeathsModel();
 			PlotViewModel relativeModel = GetRelativeViewModel(option, 0);
 			List<MapCountryCodeModel> series = new List<MapCountryCodeModel>();
 
 			foreach (var itemRelative in relativeModel.Series)
 			{
-				PopulationCountry populationCountry = _countryService.GetCountry(itemRelative.name);
-				if ( (populationCountry != null) && (itemRelative.data.Count >0) )
+				PopulationCountry populationCountry = _countryService.GetCountry(itemRelative.name, model.GetCountryIsoCode(itemRelative.name));
+				if ( (populationCountry != null) && (itemRelative.data.Count > 0) )
 				{
 					var itemMapModel = new MapCountryCodeModel
 					{

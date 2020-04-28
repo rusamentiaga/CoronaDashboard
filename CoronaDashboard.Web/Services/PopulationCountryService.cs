@@ -33,7 +33,7 @@ namespace CoronaDashboard.Web.Services
 			_alternativesNames["Yemen"] = "Yemen, Rep.";
 		}
 
-		public PopulationCountry GetCountry(string name)
+		public PopulationCountry GetCountry(string name, string isocode)
 		{
 			var query = from country in _countries
 						where (country.Name == name)
@@ -43,8 +43,21 @@ namespace CoronaDashboard.Web.Services
 
 			if (popArray.Length == 0)
 			{
+				if (isocode != String.Empty)
+				{
+					query = from country in _countries
+							where (country.IsoCode == isocode)
+							select country;
+
+					popArray = query.ToArray();
+					if (popArray.Length != 0)
+					{
+						return popArray.First();
+					}
+				}
+
 				if (_alternativesNames.ContainsKey(name))
-					return GetCountry(_alternativesNames[name]);
+					return GetCountry(_alternativesNames[name], isocode);
 				else
 					return null;
 			}

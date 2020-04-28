@@ -22,7 +22,7 @@ namespace CoronaDashboard.Data.Tests
 			Covid19DeathsModelFileCacheReader reader = new Covid19DeathsModelFileCacheReader(new Covid19DeathsModelDowloader());
 
 			string data = reader.GetCovid19Deaths();
-			Assert.IsTrue(File.Exists(Covid19DeathsModelFileCacheReader.CACHE_FILE));
+			Assert.IsTrue(File.Exists(Covid19DeathsModelFileCacheReader.DEFAULT_CACHE_FILE));
 		}
 
 		[TestMethod]
@@ -32,7 +32,7 @@ namespace CoronaDashboard.Data.Tests
 
 			string data = reader.GetCovid19Deaths();
 			reader.CacheInvalidate();
-			Assert.IsFalse(File.Exists(Covid19DeathsModelFileCacheReader.CACHE_FILE));
+			Assert.IsFalse(File.Exists(Covid19DeathsModelFileCacheReader.DEFAULT_CACHE_FILE));
 		}
 
 		[TestMethod]
@@ -61,11 +61,11 @@ namespace CoronaDashboard.Data.Tests
 			string data = reader.GetCovid19Deaths();
 			Assert.IsFalse(reader.CacheHit);
 
-			File.SetLastWriteTime(Covid19DeathsModelFileCacheReader.CACHE_FILE, DateTime.Now);
+			File.SetLastWriteTime(Covid19DeathsModelFileCacheReader.DEFAULT_CACHE_FILE, DateTime.Now);
 			data = reader.GetCovid19Deaths();
 			Assert.IsTrue(reader.CacheHit);
 
-			File.SetLastWriteTime(Covid19DeathsModelFileCacheReader.CACHE_FILE, 
+			File.SetLastWriteTime(Covid19DeathsModelFileCacheReader.DEFAULT_CACHE_FILE, 
 				DateTime.Now.AddHours(-Covid19DeathsModelFileCacheReader.EXPIRES_HOURS - 1));
 			data = reader.GetCovid19Deaths();
 			Assert.IsFalse(reader.CacheHit);

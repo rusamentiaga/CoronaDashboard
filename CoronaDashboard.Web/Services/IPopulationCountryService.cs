@@ -4,6 +4,6 @@ namespace CoronaDashboard.Web.Services
 {
 	public interface IPopulationCountryService
 	{
-		PopulationCountry GetCountry(string name);
+		PopulationCountry GetCountry(string name, string isocode);
 	}
 }
