@@ -34,10 +34,11 @@ namespace CoronaDashboard.Web
 
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 			
+			
 			services.AddTransient<ICovid19DeathsModelReader>(
 				s => new Covid19DeathsModelFileCacheReader(new Covid19DeathsModelDowloader()));
 			services.AddTransient<ICovid19DeathsModelRepository, Covid19DeathsModelRepositoryCsv>();
-
+			
 			/*
 			services.AddTransient<ICovid19DeathsModelReader>(
 				s => new Covid19DeathsModelFileCacheReader(new EcdcModelDowloader(), "opendata.ecdc.europa.eu-covid19.json"));

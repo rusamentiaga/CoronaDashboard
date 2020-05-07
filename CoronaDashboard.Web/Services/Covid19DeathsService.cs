@@ -11,7 +11,7 @@ namespace CoronaDashboard.Web.Services
 	{
 		public const int MIN_DEATHS = 10;
 		public const int MIN_DEATHS_MILLION = 1;
-		private const int MIN_POPULATION = 100000;
+		private const int MIN_POPULATION = 10000000;
 		private const int POPULATION_SCALE = 1000000;
 		private const int DENSITY_SCALE = 1;
 
