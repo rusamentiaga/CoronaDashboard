@@ -14,6 +14,7 @@ namespace CoronaDashboard.Web.Services
 		private const int MIN_POPULATION = 10000000;
 		private const int POPULATION_SCALE = 1000000;
 		private const int DENSITY_SCALE = 1;
+		private const int NUM_COUNTRY_BAR = 20;
 
 		public const string NORM_POPULATION = "million";
 		public const string NORM_DENSITY = "people per sq. km";
@@ -64,40 +65,11 @@ namespace CoronaDashboard.Web.Services
 					}
 				}
 			}
-			return new PlotViewModel { Series = series, UpdateTime = model.UpdateTime };
-		}
-
-		public PlotViewModel GetGrowthViewModel()
-		{
-			Covid19DeathsModel model = _repository.GetCovid19DeathsModel();
-
-			List<CountrySerieViewModel> series = new List<CountrySerieViewModel>();
-
-			foreach (var country in model.Countries)
-			{
-				List<int> deaths = model.MapCountryDeaths[country];
-				double maxDeaths = deaths.Max();
-
-				deaths = deaths.Where(d => d > MIN_DEATHS).ToList();
-
-				if ((maxDeaths > MIN_DEATHS) && (deaths.Count > 1))
-				{
-					List<double> data = new List<double>(deaths.Count - 1);
-
-					for (int i = 0; i < deaths.Count - 1; i++)
-					{
-						data.Add(deaths[i + 1] - deaths[i]);
-					}
-
-					var item = new CountrySerieViewModel
-					{
-						name = country,
-						data = data.Where(d => d > MIN_DEATHS).ToList()
-					};
-					series.Add(item);
-				}
-			}
-			return new PlotViewModel { Series = series, UpdateTime = model.UpdateTime };
+			return new PlotViewModel {
+				Series = series,
+				UpdateTime = model.UpdateTime,
+				SeriesLast = GetLastSeriesTop(series)
+			};
 		}
 
 		public PlotViewModel GetRelativeViewModel(string option, int minDeathsValue = MIN_DEATHS_MILLION)
@@ -134,7 +106,54 @@ namespace CoronaDashboard.Web.Services
 					}
 				}
 			}
-			return new PlotViewModel { Series = series, UpdateTime = model.UpdateTime };
+			return new PlotViewModel {
+				Series = series,
+				UpdateTime = model.UpdateTime,
+				SeriesLast = GetLastSeriesTop(series)
+			};
+		}
+
+		public PlotViewModel GetGrowthViewModel()
+		{
+			Covid19DeathsModel model = _repository.GetCovid19DeathsModel();
+
+			List<CountrySerieViewModel> series = new List<CountrySerieViewModel>();
+
+			foreach (var country in model.Countries)
+			{
+				List<int> deaths = model.MapCountryDeaths[country];
+				double maxDeaths = deaths.Max();
+
+				deaths = deaths.Where(d => d > MIN_DEATHS).ToList();
+
+				PopulationCountry populationCountry = _countryService.GetCountry(country, model.GetCountryIsoCode(country));
+
+				if ((maxDeaths > MIN_DEATHS) && (deaths.Count > 1) && (populationCountry != null))
+				{
+					if (populationCountry.Population > MIN_POPULATION)
+					{
+						List<double> data = new List<double>(deaths.Count - 1);
+
+						for (int i = 0; i < deaths.Count - 1; i++)
+						{
+							data.Add(deaths[i + 1] - deaths[i]);
+						}
+
+						var item = new CountrySerieViewModel
+						{
+							name = country,
+							data = data
+						};
+						series.Add(item);
+					}
+				}
+			}
+			return new PlotViewModel
+			{
+				Series = series,
+				UpdateTime = model.UpdateTime,
+				SeriesLast = GetLastSeriesTop(series)
+			};
 		}
 
 		public PlotViewModel GetRelativeGrowthViewModel(string option, int minDeathsValue = MIN_DEATHS_MILLION)
@@ -180,7 +199,11 @@ namespace CoronaDashboard.Web.Services
 					}
 				}
 			}
-			return new PlotViewModel { Series = series, UpdateTime = model.UpdateTime };
+			return new PlotViewModel {
+				Series = series,
+				UpdateTime = model.UpdateTime,
+				SeriesLast = GetLastSeriesTop(series)
+			};
 		}
 
 		public MapViewModel GetMapViewModel(string option)
@@ -209,6 +232,27 @@ namespace CoronaDashboard.Web.Services
 				Data = series
 			};
 
+		}
+
+		private ICollection<CountryValue> GetLastSeriesTop(List<CountrySerieViewModel> series)
+		{
+			List<CountryValue> lastValues = new List<CountryValue>();
+
+			foreach (var country in series)
+			{
+				if (country.data.Count > 0)
+				{
+					CountryValue cv = new CountryValue
+					{
+						name = country.name,
+						y = country.data.Last()
+					};
+					lastValues.Add(cv);
+				}
+			}
+			List<CountryValue> sortedList = lastValues.OrderByDescending(o => o.y).ToList();
+
+			return sortedList.Take(NUM_COUNTRY_BAR).ToList();
 		}
 	}
 }

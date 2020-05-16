@@ -25,6 +25,10 @@
 	</label>
 </div>
 
+<figure class="highcharts-figure-last">
+	<div id="bar"></div>
+</figure>
+
 @{
 	double hours = (DateTime.UtcNow - Model.UpdateTime).TotalHours;
 	string hoursStr = String.Format("{0:0.0}", hours);
@@ -38,7 +42,7 @@
 		colorpal[i] = '#' + colorpal[i];
 	}
 
-	var chart = Highcharts.chart('plot', {
+	var chartPlot = Highcharts.chart('plot', {
 
 		colors: colorpal,
 
@@ -121,7 +125,12 @@
 	});
 
 	function ChangeChartType(option) {
-		chart.update({
+		chartPlot.update({
+			yAxis: {
+				type: option
+			}
+		});
+		chartBar.update({
 			yAxis: {
 				type: option
 			}
@@ -141,4 +150,63 @@
 
 	});
 
+	chartBar = Highcharts.chart('bar', {
+		chart: {
+			height: 300,
+			type: 'column'
+		},
+		credits: {
+			enabled: false
+		},
+
+		exporting: {
+			enabled: false
+		},
+		title: {
+			text: ''
+		},
+		subtitle: {
+			text: 'Most recent data'
+		},
+		accessibility: {
+			announceNewData: {
+				enabled: true
+			}
+		},
+		xAxis: {
+			type: 'category'
+		},
+		yAxis: {
+			title: {
+				text: '@Html.Raw(ViewData["YLabel"])'
+			}
+
+		},
+		legend: {
+			enabled: false
+		},
+		plotOptions: {
+			series: {
+				borderWidth: 0,
+				dataLabels: {
+					enabled: true,
+					format: '{point.y:.@ViewData["TooltipDecimals"]f}'
+				}
+			}
+		},
+		
+		tooltip: {
+			headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+			pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.@ViewData["TooltipDecimals"]f}</b><br/>'
+		},
+		
+		series: [
+			{
+				name: '@Html.Raw(ViewData["YLabel"])',
+				colorByPoint: false,
+				data: @Html.Raw(JsonConvert.SerializeObject(Model.SeriesLast))
+			}
+		]
+
+	});
 </script>

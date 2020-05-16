@@ -9,5 +9,6 @@ namespace CoronaDashboard.Web.Models
 	{
 		public DateTime UpdateTime { get; set; }
 		public ICollection<CountrySerieViewModel> Series { get; set; }
+		public ICollection<CountryValue> SeriesLast { get; set; }
 	}
 }
