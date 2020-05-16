@@ -1,0 +1,78 @@
+﻿@model CoronaDashboard.Web.Models.TimelineViewModel
+@using Newtonsoft.Json;
+
+@{
+	ViewData["Title"] = "Map";
+}
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/timeline.js"></script>
+
+<div id="Timeline"></div>
+
+<script type="text/javascript">
+
+	Highcharts.chart('Timeline', {
+		chart: {
+			height: 600,
+			zoomType: 'x',
+			type: 'timeline',
+			panning: true,
+			panKey: 'shift'
+		},
+		xAxis: {
+			type: 'datetime',
+			visible: false
+		},
+		credits: {
+			enabled: false
+		},
+
+		exporting: {
+			enabled: false
+		},
+		yAxis: {
+			gridLineWidth: 1,
+			title: null,
+			labels: {
+				enabled: false
+			}
+		},
+		legend: {
+			enabled: false
+		},
+		title: {
+			text: 'Date of maximum number of deaths'
+		},
+		tooltip: {
+			style: {
+				width: 200
+			}
+		},
+		series: [{
+			dataLabels: {
+				allowOverlap: false,
+				format: '<span style="color:{point.color}">● </span><span style="font-weight: bold;" > ' +
+					'{point.x:%d %b %Y}</span><br/>{point.label}'
+			},
+			marker: {
+				symbol: 'circle'
+			},
+			data: @Html.Raw(JsonConvert.SerializeObject(Model.Data))
+				/*
+				[{
+				x: 1514764800000,
+				name: 'First dogs in space',
+				label: 'First dogs in space'
+			}, {
+				x: Date.UTC(1957, 9, 4),
+				name: 'First artificial satellite',
+				label: 'First artificial satellite',
+				description: "Sputnik 1 was the first artificial Earth satellite. The Soviet Union launched it into an elliptical low Earth orbit on 4 October 1957, orbiting for three weeks before its batteries died, then silently for two more months before falling back into the atmosphere."
+			}
+			]
+			*/
+		}]
+	});
+
+</script>

@@ -15,4 +15,10 @@
     <ProjectReference Include="..\CoronaDashboard.Data\CoronaDashboard.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Views\Home\Timeline.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
+
 </Project>

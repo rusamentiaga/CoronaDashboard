@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CoronaDashboard.Web.Services
 {
-	public class Covid19DeathsService: ICovid19DeathsService
+	public class Covid19DeathsService : ICovid19DeathsService
 	{
 		public const int MIN_DEATHS = 10;
 		public const int MIN_DEATHS_MILLION = 1;
@@ -65,7 +65,8 @@ namespace CoronaDashboard.Web.Services
 					}
 				}
 			}
-			return new PlotViewModel {
+			return new PlotViewModel
+			{
 				Series = series,
 				UpdateTime = model.UpdateTime,
 				SeriesLast = GetLastSeriesTop(series)
@@ -106,7 +107,8 @@ namespace CoronaDashboard.Web.Services
 					}
 				}
 			}
-			return new PlotViewModel {
+			return new PlotViewModel
+			{
 				Series = series,
 				UpdateTime = model.UpdateTime,
 				SeriesLast = GetLastSeriesTop(series)
@@ -199,7 +201,8 @@ namespace CoronaDashboard.Web.Services
 					}
 				}
 			}
-			return new PlotViewModel {
+			return new PlotViewModel
+			{
 				Series = series,
 				UpdateTime = model.UpdateTime,
 				SeriesLast = GetLastSeriesTop(series)
@@ -215,12 +218,12 @@ namespace CoronaDashboard.Web.Services
 			foreach (var itemRelative in relativeModel.Series)
 			{
 				PopulationCountry populationCountry = _countryService.GetCountry(itemRelative.name, model.GetCountryIsoCode(itemRelative.name));
-				if ( (populationCountry != null) && (itemRelative.data.Count > 0) )
+				if ((populationCountry != null) && (itemRelative.data.Count > 0))
 				{
 					var itemMapModel = new MapCountryCodeModel
 					{
 						code3 = populationCountry.IsoCode,
-						value = itemRelative.data[itemRelative.data.Count-1]
+						value = itemRelative.data[itemRelative.data.Count - 1]
 					};
 					series.Add(itemMapModel);
 				}
@@ -253,6 +256,74 @@ namespace CoronaDashboard.Web.Services
 			List<CountryValue> sortedList = lastValues.OrderByDescending(o => o.y).ToList();
 
 			return sortedList.Take(NUM_COUNTRY_BAR).ToList();
+		}
+
+		public TimelineViewModel GetTimeline()
+		{
+			const int SecondsHour = 3600;
+			const string DateFormat = "MMMM dd yyyy";
+
+			Covid19DeathsModel model = _repository.GetCovid19DeathsModel();
+
+			List<PeakDeaths> data = new List<PeakDeaths>();
+
+			HashSet<DateTime> usedDates = new HashSet<DateTime>();
+			Random random = new Random();
+
+			foreach (var country in model.Countries)
+			{
+				List<int> deathsCountry = model.MapCountryDeaths[country];
+
+				int maxDeaths = deathsCountry.Max();
+
+				PopulationCountry populationCountry = _countryService.GetCountry(country, model.GetCountryIsoCode(country));
+
+				if ((maxDeaths > MIN_DEATHS) && (populationCountry != null) && (deathsCountry.Count > 1))
+				{
+					if (populationCountry.Population > MIN_POPULATION)
+					{
+						List<int> dataDaily = new List<int>(deathsCountry.Count);
+
+						dataDaily.Add(deathsCountry[0]);
+						for (int i = 0; i < deathsCountry.Count - 1; i++)
+						{
+							dataDaily.Add(deathsCountry[i + 1] - deathsCountry[i]);
+						}
+
+						int maxDeathsDaily = dataDaily.Max();
+						int maxIndexDaily = dataDaily.IndexOf(maxDeathsDaily);
+
+						if (maxDeathsDaily > MIN_DEATHS)
+						{
+							DateTime peakDate = model.Dates[maxIndexDaily];
+
+							// Avoid repeat exact same date
+							while (usedDates.Contains(peakDate))
+							{
+								peakDate = model.Dates[maxIndexDaily].AddSeconds(random.Next(0, SecondsHour));
+							}
+							usedDates.Add(peakDate);
+
+							string peakDateStr = peakDate.ToString(DateFormat,
+									System.Globalization.DateTimeFormatInfo.InvariantInfo);
+
+							PeakDeaths item = new PeakDeaths
+							{
+								x = new DateTimeOffset(peakDate.AddDays(1)).ToUnixTimeMilliseconds(),
+								name = country,
+								label = country,
+								description = $"{maxDeathsDaily} deaths - {peakDateStr}"
+							};
+							data.Add(item);
+						}
+					}
+				}
+			}
+
+			return new TimelineViewModel
+			{
+				Data = data
+			};
 		}
 	}
 }

@@ -21,6 +21,13 @@ namespace CoronaDashboard.Web.Controllers
 			_covidService = covidService;
 		}
 
+		public IActionResult Timeline(string option)
+		{
+			TimelineViewModel model = _covidService.GetTimeline();
+
+			return View(model);
+		}
+
 		public IActionResult Map(string option)
 		{
 			MapViewModel model = _covidService.GetMapViewModel(option);
