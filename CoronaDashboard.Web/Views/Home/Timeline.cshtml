@@ -10,11 +10,14 @@
 
 <div id="Timeline"></div>
 
+<div id="barAbsolute"></div>
+
+<div id="barRelative"></div>
+
 <script type="text/javascript">
 
 	Highcharts.chart('Timeline', {
 		chart: {
-			height: 600,
 			zoomType: 'x',
 			type: 'timeline',
 			panning: true,
@@ -75,4 +78,123 @@
 		}]
 	});
 
+	chartBarAbs = Highcharts.chart('barAbsolute', {
+		chart: {
+			height: 300,
+			type: 'column'
+		},
+		credits: {
+			enabled: false
+		},
+
+		exporting: {
+			enabled: false
+		},
+		title: {
+			text: ''
+		},
+		subtitle: {
+			text: 'Max number of daily deaths'
+		},
+		accessibility: {
+			announceNewData: {
+				enabled: true
+			}
+		},
+		xAxis: {
+			type: 'category'
+		},
+		yAxis: {
+			title: {
+				text: 'Deaths'
+			}
+
+		},
+		legend: {
+			enabled: false
+		},
+		plotOptions: {
+			series: {
+				borderWidth: 0,
+				dataLabels: {
+					enabled: true,
+					format: '{point.y:.0f}'
+				}
+			}
+		},
+
+		tooltip: {
+			headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+			pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.0f}</b> ({point.date})<br/>'
+		},
+
+		series: [
+			{
+				name: 'Deaths / million',
+				colorByPoint: false,
+				data: @Html.Raw(JsonConvert.SerializeObject(Model.MaxDeathsAbsolute))
+			}
+		]
+
+	});
+
+	chartBarRelative = Highcharts.chart('barRelative', {
+		chart: {
+			height: 300,
+			type: 'column'
+		},
+		credits: {
+			enabled: false
+		},
+
+		exporting: {
+			enabled: false
+		},
+		title: {
+			text: ''
+		},
+		subtitle: {
+			text: 'Max number of daily deaths / million'
+		},
+		accessibility: {
+			announceNewData: {
+				enabled: true
+			}
+		},
+		xAxis: {
+			type: 'category'
+		},
+		yAxis: {
+			title: {
+				text: 'Deaths / million'
+			}
+
+		},
+		legend: {
+			enabled: false
+		},
+		plotOptions: {
+			series: {
+				borderWidth: 0,
+				dataLabels: {
+					enabled: true,
+					format: '{point.y:.2f}'
+				}
+			}
+		},
+
+		tooltip: {
+			headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+			pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.0f}</b> ({point.date})<br/>'
+		},
+
+		series: [
+			{
+				name: 'Deaths / million',
+				colorByPoint: false,
+				data: @Html.Raw(JsonConvert.SerializeObject(Model.MaxDeathsRelative))
+			}
+		]
+
+	});
 </script>

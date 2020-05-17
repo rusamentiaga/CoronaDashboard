@@ -23,7 +23,7 @@ namespace CoronaDashboard.Web.Controllers
 
 		public IActionResult Timeline(string option)
 		{
-			TimelineViewModel model = _covidService.GetTimeline();
+			TimelineViewModel model = _covidService.GetTimeline(option);
 
 			return View(model);
 		}

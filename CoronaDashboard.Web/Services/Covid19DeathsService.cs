@@ -258,7 +258,7 @@ namespace CoronaDashboard.Web.Services
 			return sortedList.Take(NUM_COUNTRY_BAR).ToList();
 		}
 
-		public TimelineViewModel GetTimeline()
+		public TimelineViewModel GetTimeline(string option)
 		{
 			const int SecondsHour = 3600;
 			const string DateFormat = "MMMM dd yyyy";
@@ -312,6 +312,8 @@ namespace CoronaDashboard.Web.Services
 								x = new DateTimeOffset(peakDate.AddDays(1)).ToUnixTimeMilliseconds(),
 								name = country,
 								label = country,
+								max = maxDeathsDaily,
+								date = peakDateStr,
 								description = $"{maxDeathsDaily} deaths - {peakDateStr}"
 							};
 							data.Add(item);
@@ -320,9 +322,42 @@ namespace CoronaDashboard.Web.Services
 				}
 			}
 
+			List<CountryValue> MaxDeathsAbsolute = new List<CountryValue>();
+			List<CountryValue> MaxDeathsRelative = new List<CountryValue>();
+			var normalizationStrategy = _normalizationStrategyMap[option];
+
+			foreach (var item in data)
+			{
+				PopulationCountry populationCountry = _countryService.GetCountry(item.name, model.GetCountryIsoCode(item.name));
+				if ((populationCountry != null))
+				{
+					double scale = normalizationStrategy.Invoke(populationCountry);
+
+					var itemCountryValueRelative = new CountryValue
+					{
+						name = item.name,
+						y = item.max * scale,
+						date = item.date
+					};
+					MaxDeathsRelative.Add(itemCountryValueRelative);
+
+					var itemCountryValueAbsolute = new CountryValue
+					{
+						name = item.name,
+						y = item.max,
+						date = item.date
+					};
+					MaxDeathsAbsolute.Add(itemCountryValueAbsolute);
+				}
+			}
+			List<CountryValue> sortedMaxDeathsRelative = MaxDeathsRelative.OrderByDescending(o => o.y).ToList();
+			List<CountryValue> sortedMaxDeathsAbsolute = MaxDeathsAbsolute.OrderByDescending(o => o.y).ToList();
+
 			return new TimelineViewModel
 			{
-				Data = data
+				Data = data,
+				MaxDeathsRelative = sortedMaxDeathsRelative.Take(NUM_COUNTRY_BAR).ToList(),
+				MaxDeathsAbsolute = sortedMaxDeathsAbsolute.Take(NUM_COUNTRY_BAR).ToList()
 			};
 		}
 	}
