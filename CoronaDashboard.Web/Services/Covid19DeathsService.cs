@@ -295,7 +295,14 @@ namespace CoronaDashboard.Web.Services
 
 						if (maxDeathsDaily > MIN_DEATHS)
 						{
-							DateTime peakDate = model.Dates[maxIndexDaily];
+							DateTime peakDate;
+
+							if (maxIndexDaily >= model.Dates.Count)
+							{
+								peakDate = DateTime.Now;
+							}
+							else
+								peakDate = model.Dates[maxIndexDaily];
 
 							// Avoid repeat exact same date
 							while (usedDates.Contains(peakDate))

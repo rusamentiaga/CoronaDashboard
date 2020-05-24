@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace CoronaDashboard.Data
 {
@@ -19,6 +20,8 @@ namespace CoronaDashboard.Data
 
 		public Covid19DeathsModel GetCovid19DeathsModel()
 		{
+			const string DATE_FORMAT = "dd/M/yyyy";
+
 			string json = _reader.GetCovid19Deaths();
 			EcdcModel ecdcModel = JsonConvert.DeserializeObject<EcdcModel>(json);
 
@@ -38,6 +41,19 @@ namespace CoronaDashboard.Data
 					model.MapCountryIsoCode[record.countriesAndTerritories] = record.countryterritoryCode;
 				}
 				model.MapCountryDeaths[record.countriesAndTerritories].Insert(0, Int32.Parse(record.deaths));
+			}
+
+			model.Dates = new List<DateTime>();
+
+			// @@Bug: not all contries have the same number of dates
+			string FirstCountry = model.Countries.First();
+			foreach (var record in ecdcModel.records)
+			{
+				if (record.countriesAndTerritories == FirstCountry)
+				{
+					DateTime date = DateTime.ParseExact(record.dateRep, DATE_FORMAT, CultureInfo.InvariantCulture);
+					model.Dates.Insert(0, date);
+				}
 			}
 
 			foreach (var entry in model.MapCountryDeaths)
