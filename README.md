@@ -3,4 +3,4 @@ Coronavirus Dashboard
 
 http://coronaplot.azurewebsites.net/
 
-![](web.png)
+![](Coronaplot.gif)
