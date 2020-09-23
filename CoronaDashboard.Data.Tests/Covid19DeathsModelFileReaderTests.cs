@@ -10,64 +10,64 @@ namespace CoronaDashboard.Data.Tests
 		[TestMethod]
 		public void TestReader()
 		{
-			Covid19DeathsModelFileCacheReader reader = new Covid19DeathsModelFileCacheReader(new Covid19DeathsModelDowloader());
+			HopkinsModelFileCacheReader reader = new HopkinsModelFileCacheReader(new HopkinsModelDowloader("time_series_covid19_deaths_global.csv"));
 
-			string data = reader.GetCovid19Deaths();
+			string data = reader.GetRawModel();
 			Assert.AreNotEqual(data, string.Empty);
 		}
 
 		[TestMethod]
 		public void TestCache()
 		{
-			Covid19DeathsModelFileCacheReader reader = new Covid19DeathsModelFileCacheReader(new Covid19DeathsModelDowloader());
+			HopkinsModelFileCacheReader reader = new HopkinsModelFileCacheReader(new HopkinsModelDowloader("time_series_covid19_deaths_global.csv"));
 
-			string data = reader.GetCovid19Deaths();
-			Assert.IsTrue(File.Exists(Covid19DeathsModelFileCacheReader.DEFAULT_CACHE_FILE));
+			string data = reader.GetRawModel();
+			Assert.IsTrue(File.Exists(HopkinsModelFileCacheReader.DEFAULT_CACHE_FILE));
 		}
 
 		[TestMethod]
 		public void TestCacheClean()
 		{
-			Covid19DeathsModelFileCacheReader reader = new Covid19DeathsModelFileCacheReader(new Covid19DeathsModelDowloader());
+			HopkinsModelFileCacheReader reader = new HopkinsModelFileCacheReader(new HopkinsModelDowloader("time_series_covid19_deaths_global.csv"));
 
-			string data = reader.GetCovid19Deaths();
+			string data = reader.GetRawModel();
 			reader.CacheInvalidate();
-			Assert.IsFalse(File.Exists(Covid19DeathsModelFileCacheReader.DEFAULT_CACHE_FILE));
+			Assert.IsFalse(File.Exists(HopkinsModelFileCacheReader.DEFAULT_CACHE_FILE));
 		}
 
 		[TestMethod]
 		public void TestCacheHit()
 		{
-			Covid19DeathsModelFileCacheReader reader = new Covid19DeathsModelFileCacheReader(new Covid19DeathsModelDowloader());
+			HopkinsModelFileCacheReader reader = new HopkinsModelFileCacheReader(new HopkinsModelDowloader("time_series_covid19_deaths_global.csv"));
 
 			reader.CacheInvalidate();
-			string data = reader.GetCovid19Deaths();
+			string data = reader.GetRawModel();
 			Assert.IsFalse(reader.CacheHit);
 
-			data = reader.GetCovid19Deaths();
+			data = reader.GetRawModel();
 			Assert.IsTrue(reader.CacheHit);
 
 			reader.CacheInvalidate();
-			data = reader.GetCovid19Deaths();
+			data = reader.GetRawModel();
 			Assert.IsFalse(reader.CacheHit);
 		}
 
 		[TestMethod]
 		public void TestCacheExpire()
 		{
-			Covid19DeathsModelFileCacheReader reader = new Covid19DeathsModelFileCacheReader(new Covid19DeathsModelDowloader());
+			HopkinsModelFileCacheReader reader = new HopkinsModelFileCacheReader(new HopkinsModelDowloader("time_series_covid19_deaths_global.csv"));
 
 			reader.CacheInvalidate();
-			string data = reader.GetCovid19Deaths();
+			string data = reader.GetRawModel();
 			Assert.IsFalse(reader.CacheHit);
 
-			File.SetLastWriteTime(Covid19DeathsModelFileCacheReader.DEFAULT_CACHE_FILE, DateTime.Now);
-			data = reader.GetCovid19Deaths();
+			File.SetLastWriteTime(HopkinsModelFileCacheReader.DEFAULT_CACHE_FILE, DateTime.Now);
+			data = reader.GetRawModel();
 			Assert.IsTrue(reader.CacheHit);
 
-			File.SetLastWriteTime(Covid19DeathsModelFileCacheReader.DEFAULT_CACHE_FILE, 
-				DateTime.Now.AddHours(-Covid19DeathsModelFileCacheReader.EXPIRES_HOURS - 1));
-			data = reader.GetCovid19Deaths();
+			File.SetLastWriteTime(HopkinsModelFileCacheReader.DEFAULT_CACHE_FILE, 
+				DateTime.Now.AddHours(-HopkinsModelFileCacheReader.EXPIRES_HOURS - 1));
+			data = reader.GetRawModel();
 			Assert.IsFalse(reader.CacheHit);
 		}
 	}

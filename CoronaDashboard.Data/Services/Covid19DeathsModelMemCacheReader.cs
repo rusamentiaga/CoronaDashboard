@@ -3,15 +3,15 @@ using System.IO;
 
 namespace CoronaDashboard.Data
 {
-	public class Covid19DeathsModelMemCacheReader : ICovid19DeathsModelCacheReader
+	public class HopkinsModelMemCacheReader : IHopkinsModelCacheReader
 	{
 		public const int EXPIRES_HOURS = 4;
 
-		ICovid19DeathsModelReader _reader = new Covid19DeathsModelDowloader();
+		IHopkinsModelReader _reader;
 		string _data;
 		DateTime _updateTime;
 
-		public Covid19DeathsModelMemCacheReader(ICovid19DeathsModelReader reader)
+		public HopkinsModelMemCacheReader(IHopkinsModelReader reader)
 		{
 			_reader = reader;
 			_data = null;
@@ -41,7 +41,7 @@ namespace CoronaDashboard.Data
 
 		protected override string ReadData()
 		{
-			return _reader.GetCovid19Deaths();
+			return _reader.GetRawModel();
 		}
 
 		protected override string CacheRead()

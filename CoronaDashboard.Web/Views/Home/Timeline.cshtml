@@ -2,7 +2,7 @@
 @using Newtonsoft.Json;
 
 @{
-	ViewData["Title"] = "Map";
+	ViewData["Title"] = "Peaks";
 }
 
 <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -45,7 +45,7 @@
 			enabled: false
 		},
 		title: {
-			text: 'Date of maximum number of deaths'
+			text: 'Date of maximum number of @ViewData["Metric"]'
 		},
 		tooltip: {
 			style: {
@@ -94,7 +94,7 @@
 			text: ''
 		},
 		subtitle: {
-			text: 'Max number of daily deaths'
+			text: 'Max number of daily @ViewData["Metric"]'
 		},
 		accessibility: {
 			announceNewData: {
@@ -106,7 +106,7 @@
 		},
 		yAxis: {
 			title: {
-				text: 'Deaths'
+				text: '@ViewData["Metric"]'
 			}
 
 		},
@@ -130,7 +130,7 @@
 
 		series: [
 			{
-				name: 'Deaths / million',
+				name: '@ViewData["Metric"] / million',
 				colorByPoint: false,
 				data: @Html.Raw(JsonConvert.SerializeObject(Model.MaxDeathsAbsolute))
 			}
@@ -154,7 +154,7 @@
 			text: ''
 		},
 		subtitle: {
-			text: 'Max number of daily deaths / million'
+			text: 'Max number of daily @ViewData["Metric"] / million'
 		},
 		accessibility: {
 			announceNewData: {
@@ -166,7 +166,7 @@
 		},
 		yAxis: {
 			title: {
-				text: 'Deaths / million'
+				text: '@ViewData["Metric"] / million'
 			}
 
 		},
@@ -190,7 +190,7 @@
 
 		series: [
 			{
-				name: 'Deaths / million',
+				name: '@ViewData["Metric"] / million',
 				colorByPoint: false,
 				data: @Html.Raw(JsonConvert.SerializeObject(Model.MaxDeathsRelative))
 			}

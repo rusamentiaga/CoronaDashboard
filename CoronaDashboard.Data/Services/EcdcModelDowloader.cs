@@ -3,11 +3,11 @@ using System;
 
 namespace CoronaDashboard.Data
 {
-	public class EcdcModelDowloader : ICovid19DeathsModelReader
+	public class EcdcModelDowloader : IHopkinsModelReader
 	{
 		const string FILE_URL = "https://opendata.ecdc.europa.eu/covid19/casedistribution/json";
 
-		public string GetCovid19Deaths()
+		public string GetRawModel()
 		{
 			using (System.Net.WebClient wc = new System.Net.WebClient())
 			{

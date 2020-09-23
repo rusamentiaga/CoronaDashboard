@@ -10,10 +10,11 @@ namespace CoronaDashboard.Data.Tests
 		[TestMethod]
 		public void TestDecoder()
 		{
-			Covid19DeathsModelFileCacheReader reader = new Covid19DeathsModelFileCacheReader(new Covid19DeathsModelDowloader());
-			Covid19DeathsModelRepositoryCsv decoder = new Covid19DeathsModelRepositoryCsv(reader);
+			IHopkinsModelReader reader = new DeathsModelReader();
+			IEnumerable<IHopkinsModelReader> readers = new List<IHopkinsModelReader> { reader };
+			HopkinsModelRepositoryCsv decoder = new HopkinsModelRepositoryCsv(readers);
 
-			Covid19DeathsModel model = decoder.GetCovid19DeathsModel();
+			HopkinsModel model = decoder.GetHopkinsModel("Deaths");
 			Assert.AreNotEqual(model.MapCountryDeaths["Spain"], null);
 		}
 
@@ -24,10 +25,12 @@ namespace CoronaDashboard.Data.Tests
 			{
 				0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,3,5,10,17,28,35,54,55,133,195,289,342,533,623,830,1043,1375,1772
 			};
-			Covid19DeathsModelFileReader reader = new Covid19DeathsModelFileReader("time_series_19-covid-Deaths_2020-03-23.csv");
-			Covid19DeathsModelRepositoryCsv decoder = new Covid19DeathsModelRepositoryCsv(reader);
+			HopkinsModelFileReader reader = new HopkinsModelFileReader("time_series_19-covid-Deaths_2020-03-23.csv");
 
-			Covid19DeathsModel model = decoder.GetCovid19DeathsModel();
+			IEnumerable<IHopkinsModelReader> readers = new List<IHopkinsModelReader> { reader };
+			HopkinsModelRepositoryCsv decoder = new HopkinsModelRepositoryCsv(readers);
+
+			HopkinsModel model = decoder.GetHopkinsModel("Deaths");
 
 			CollectionAssert.AreEqual(model.MapCountryDeaths["Spain"], expected);
 		}

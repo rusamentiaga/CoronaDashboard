@@ -1,7 +1,7 @@
 ﻿namespace CoronaDashboard.Data
 {
-	public interface ICovid19DeathsModelRepository
+	public interface IHopkinsModelRepository
 	{
-		Covid19DeathsModel GetCovid19DeathsModel();
+		HopkinsModel GetHopkinsModel(string metric);
 	}
 }

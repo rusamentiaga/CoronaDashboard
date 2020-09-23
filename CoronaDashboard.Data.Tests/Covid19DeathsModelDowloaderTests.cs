@@ -8,9 +8,9 @@ namespace CoronaDashboard.Data.Tests
 		[TestMethod]
 		public void TestDownload()
 		{
-			Covid19DeathsModelDowloader downloader = new Covid19DeathsModelDowloader();
+			HopkinsModelDowloader downloader = new HopkinsModelDowloader("time_series_covid19_deaths_global.csv");
 
-			string data = downloader.GetCovid19Deaths();
+			string data = downloader.GetRawModel();
 			Assert.AreNotEqual(data, string.Empty);
 		}
 	}

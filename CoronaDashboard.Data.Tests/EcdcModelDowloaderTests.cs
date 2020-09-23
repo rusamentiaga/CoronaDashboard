@@ -10,7 +10,7 @@ namespace CoronaDashboard.Data.Tests
 		{
 			EcdcModelDowloader downloader = new EcdcModelDowloader();
 
-			string data = downloader.GetCovid19Deaths();
+			string data = downloader.GetRawModel();
 			Assert.AreNotEqual(data, string.Empty);
 		}
 	}

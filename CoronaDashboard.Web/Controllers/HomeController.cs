@@ -14,68 +14,75 @@ namespace CoronaDashboard.Web.Controllers
 {
 	public class HomeController : Controller
 	{
-		ICovid19DeathsService _covidService;
+		IViewModelService _covidService;
 
-		public HomeController(ICovid19DeathsService covidService)
+		public HomeController(IViewModelService covidService)
 		{
 			_covidService = covidService;
 		}
 
-		public IActionResult Timeline(string option)
+		public IActionResult Timeline(string metric, string option)
 		{
-			TimelineViewModel model = _covidService.GetTimeline(option);
+			TimelineViewModel model = _covidService.GetTimeline(metric, option);
+
+			ViewData["Metric"] = metric;
 
 			return View(model);
 		}
 
-		public IActionResult Map(string option)
+		public IActionResult Map(string metric, string option)
 		{
-			MapViewModel model = _covidService.GetMapViewModel(option);
+			MapViewModel model = _covidService.GetMapViewModel(metric, option);
+
+			ViewData["Metric"] = metric;
 
 			return View(model);
 		}
 
-		public IActionResult Growth(string option)
+		public IActionResult Growth(string metric, string option)
 		{
-			PlotViewModel model = _covidService.GetGrowthViewModel();
+			PlotViewModel model = _covidService.GetGrowthViewModel(metric);
 
+			ViewData["Metric"] = metric;
 			ViewData["Title"] = "Growth";
-			ViewData["YLabel"] = "Deaths per day";
+			ViewData["YLabel"] = metric + " per day";
 			ViewData["TooltipDecimals"] = 0;
 			ViewData["YMin"] = 0.1;
 			ViewData["YType"] = "linear";
 			ViewData["YTickInterval"] = 100;
-			ViewData["XLabel"] = "Days from death 10";
+			ViewData["XLabel"] = "Days from 10 " + metric;
 
 			return View("Plot", model);
 		}
 
-		public IActionResult GrowthRelative(string option)
+		public IActionResult GrowthRelative(string metric, string option)
 		{
-			PlotViewModel model = _covidService.GetRelativeGrowthViewModel(option,
-				Covid19DeathsService.MIN_DEATHS_MILLION);
+			PlotViewModel model = _covidService.GetRelativeGrowthViewModel(metric, option,
+				ViewModelService.MIN_DEATHS_MILLION);
 
+			ViewData["Metric"] = metric;
 			ViewData["Title"] = "Growth relative";
-			ViewData["YLabel"] = "Deaths per day / million";
+			ViewData["YLabel"] = metric + " per day / million";
 			ViewData["TooltipDecimals"] = 1;
 			ViewData["YMin"] = 0;
 			ViewData["YType"] = "linear";
 			ViewData["YTickInterval"] = 10;
-			ViewData["XLabel"] = "Days from death 10";
+			ViewData["XLabel"] = "Days from 10 " + metric;
 
 			return View("Plot", model);
 		}
 
-		public IActionResult Absolute(string option)
+		public IActionResult Absolute(string metric, string option)
 		{
-			PlotViewModel model = _covidService.GetAbsoluteDataViewModel();
+			PlotViewModel model = _covidService.GetAbsoluteDataViewModel(metric);
 
+			ViewData["Metric"] = metric;
 			ViewData["Title"] = "Absolute";
-			ViewData["YLabel"] = "Deaths";
+			ViewData["YLabel"] = metric;
 			ViewData["TooltipDecimals"] = 0;
-			ViewData["YMin"] = Covid19DeathsService.MIN_DEATHS;
+			ViewData["YMin"] = ViewModelService.MIN_DEATHS;
 			ViewData["YType"] = option;
-			ViewData["XLabel"] = "Days from death 10";
+			ViewData["XLabel"] = "Days from 10 " + metric;
 
 			if (option == "logarithmic")
 			{
@@ -89,17 +96,18 @@ namespace CoronaDashboard.Web.Controllers
 			return View("Plot", model);
 		}
 
-		public IActionResult Relative(string option = Covid19DeathsService.NORM_POPULATION)
+		public IActionResult Relative(string metric, string option = ViewModelService.NORM_POPULATION)
 		{
-			PlotViewModel model = _covidService.GetRelativeViewModel(option, Covid19DeathsService.MIN_DEATHS_MILLION);
+			PlotViewModel model = _covidService.GetRelativeViewModel(metric, option, ViewModelService.MIN_DEATHS_MILLION);
 
+			ViewData["Metric"] = metric;
 			ViewData["Title"] = "Relative";
-			ViewData["YLabel"] = "Deaths / "+ option;
+			ViewData["YLabel"] = metric + " / " + option;
 			ViewData["TooltipDecimals"] = 2;
 			ViewData["YMin"] = 1;
 			ViewData["YType"] = "linear";
 			ViewData["YTickInterval"] = 1;
-			ViewData["XLabel"] = "Days from 1 death / million";
+			ViewData["XLabel"] = $"Days from 1 {metric} / million";
 
 			return View("Plot", model);
 		}

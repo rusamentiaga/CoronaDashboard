@@ -1,6 +1,6 @@
 ﻿namespace CoronaDashboard.Data
 {
-	public abstract class ICovid19DeathsModelCacheReader : ICovid19DeathsModelReader
+	public abstract class IHopkinsModelCacheReader : IHopkinsModelReader
 	{
 		public bool CacheHit { private set; get; }
 
@@ -12,7 +12,7 @@
 
 		private readonly object cacheLock = new object();
 
-		public string GetCovid19Deaths()
+		public string GetRawModel()
 		{
 			string data;
 

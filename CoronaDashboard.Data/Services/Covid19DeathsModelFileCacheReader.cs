@@ -3,15 +3,16 @@ using System.IO;
 
 namespace CoronaDashboard.Data
 {
-	public class Covid19DeathsModelFileCacheReader : ICovid19DeathsModelCacheReader
+	public class HopkinsModelFileCacheReader : IHopkinsModelCacheReader
 	{
-		public const string DEFAULT_CACHE_FILE = "time_series_19-covid-Deaths.csv";
+//		public const string DEFAULT_CACHE_FILE = "time_series_19-covid-Deaths.csv";
+		public const string DEFAULT_CACHE_FILE = "time_series_19-covid-Confirmed.csv";
 		public const int EXPIRES_HOURS = 6;
 
-		ICovid19DeathsModelReader _reader = new Covid19DeathsModelDowloader();
+		IHopkinsModelReader _reader;
 		string _cacheFile;
 
-		public Covid19DeathsModelFileCacheReader(ICovid19DeathsModelReader reader, string cacheFile = DEFAULT_CACHE_FILE)
+		public HopkinsModelFileCacheReader(IHopkinsModelReader reader, string cacheFile = DEFAULT_CACHE_FILE)
 		{
 			_reader = reader;
 			_cacheFile = cacheFile;
@@ -40,7 +41,7 @@ namespace CoronaDashboard.Data
 
 		protected override string ReadData()
 		{
-			return _reader.GetCovid19Deaths();
+			return _reader.GetRawModel();
 		}
 
 		protected override string CacheRead()

@@ -1,7 +1,7 @@
 ﻿namespace CoronaDashboard.Data
 {
-	public interface ICovid19DeathsModelReader
+	public interface IHopkinsModelReader
 	{
-		string GetCovid19Deaths();
+		string GetRawModel();
 	}
 }

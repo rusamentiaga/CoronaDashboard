@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CoronaDashboard.Data
 {
-	public class Covid19DeathsModel
+	public class HopkinsModel
 	{
 		public DateTime UpdateTime { get; set; }
 		public List<string> Countries { get; set; }

@@ -9,23 +9,23 @@ namespace CoronaDashboard.Data
 {
 	// https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide
 
-	public class EcdcModelRepositoryJson : ICovid19DeathsModelRepository
+	public class EcdcModelRepositoryJson : IHopkinsModelRepository
 	{
-		ICovid19DeathsModelReader _reader;
+		IHopkinsModelReader _reader;
 
-		public EcdcModelRepositoryJson(ICovid19DeathsModelReader reader)
+		public EcdcModelRepositoryJson(IHopkinsModelReader reader)
 		{
 			_reader = reader;
 		}
 
-		public Covid19DeathsModel GetCovid19DeathsModel()
+		public HopkinsModel GetHopkinsModel(string metric = "")
 		{
 			const string DATE_FORMAT = "dd/M/yyyy";
 
-			string json = _reader.GetCovid19Deaths();
+			string json = _reader.GetRawModel();
 			EcdcModel ecdcModel = JsonConvert.DeserializeObject<EcdcModel>(json);
 
-			Covid19DeathsModel model = new Covid19DeathsModel();
+			HopkinsModel model = new HopkinsModel();
 
 			model.Countries = new List<string>();
 			model.MapCountryDeaths = new Dictionary<string, List<int>>();

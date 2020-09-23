@@ -24,10 +24,10 @@ namespace CoronaDashboard.Data.Tests
 		[TestMethod]
 		public void TestData()
 		{
-			Covid19DeathsModelFileReader reader = new Covid19DeathsModelFileReader("opendata.ecdc.europa.eu-covid19.json");
+			HopkinsModelFileReader reader = new HopkinsModelFileReader("opendata.ecdc.europa.eu-covid19.json");
 			EcdcModelRepositoryJson decoder = new EcdcModelRepositoryJson(reader);
 
-			Covid19DeathsModel model = decoder.GetCovid19DeathsModel();
+			HopkinsModel model = decoder.GetHopkinsModel();
 
 			var item = model.MapCountryDeaths["Spain"];
 			Assert.AreEqual(item[0], 0);

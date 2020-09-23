@@ -24,7 +24,7 @@
 	</environment>
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-light navbar-inverse navbar-fixed-top">
         <div class="container">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -34,17 +34,19 @@
 					<span class="icon-bar"></span>
 				</button>
 			</div>
-            <div class="navbar-collapse collapse">
+			<div class="navbar-collapse collapse">
+				<a class="navbar-brand" asp-controller="Home" asp-action="Absolute" asp-route-metric='Deaths'>Deaths</a>
+				<a class="navbar-brand" asp-controller="Home" asp-action="Absolute" asp-route-metric='Cases'>Cases</a>
 				<ul class="nav navbar-nav">
-					<li><a asp-area="" asp-controller="Home" asp-action="Absolute" asp-route-option='linear'>Deaths</a></li>
-					<li><a asp-area="" asp-controller="Home" asp-action="Relative" asp-route-option='@Covid19DeathsService.NORM_POPULATION'>Deaths / population</a></li>
-					<li><a asp-area="" asp-controller="Home" asp-action="Relative" asp-route-option='@Covid19DeathsService.NORM_DENSITY'>Deaths / density</a></li>
-					<li><a asp-area="" asp-controller="Home" asp-action="Growth" asp-route-option='linear'>Deaths per day</a></li>
-					<li><a asp-area="" asp-controller="Home" asp-action="GrowthRelative" asp-route-option='@Covid19DeathsService.NORM_POPULATION'>Deaths per day / population</a></li>
-					<li><a asp-area="" asp-controller="Home" asp-action="Map" asp-route-option='@Covid19DeathsService.NORM_POPULATION'>Map</a></li>
-					<li><a asp-area="" asp-controller="Home" asp-action="Timeline" asp-route-option='@Covid19DeathsService.NORM_POPULATION'>Peaks</a></li>
+					<li><a asp-area="" asp-controller="Home" asp-action="Absolute" asp-route-option='linear'>@ViewData["Metric"]</a></li>
+					<li><a asp-area="" asp-controller="Home" asp-action="Relative" asp-route-option='@ViewModelService.NORM_POPULATION'>@ViewData["Metric"] / population</a></li>
+					<li><a asp-area="" asp-controller="Home" asp-action="Relative" asp-route-option='@ViewModelService.NORM_DENSITY'>@ViewData["Metric"] / density</a></li>
+					<li><a asp-area="" asp-controller="Home" asp-action="Growth" asp-route-option='linear'>@ViewData["Metric"] per day</a></li>
+					<li><a asp-area="" asp-controller="Home" asp-action="GrowthRelative" asp-route-option='@ViewModelService.NORM_POPULATION'>@ViewData["Metric"] per day / population</a></li>
+					<li><a asp-area="" asp-controller="Home" asp-action="Map" asp-route-option='@ViewModelService.NORM_POPULATION'>@ViewData["Metric"] Map</a></li>
+					<li><a asp-area="" asp-controller="Home" asp-action="Timeline" asp-route-option='@ViewModelService.NORM_POPULATION'>@ViewData["Metric"] Peaks</a></li>
 				</ul>
-            </div>
+			</div>
         </div>
     </nav>
 

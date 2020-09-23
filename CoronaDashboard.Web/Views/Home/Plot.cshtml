@@ -66,12 +66,12 @@
 		},
 
 		title: {
-			text: 'Coronavirus deaths'
+			text: 'Coronavirus @ViewData["Metric"]'
 		},
 
 		subtitle: {
 			useHTML: true,
-			text: 'Data source: <a href=" https://github.com/CSSEGISandData/COVID-19">CSSEGISandData</a> (@Model.UpdateTime.ToString("u"), @hoursStr hours ago)'
+			text: 'Data source: <a href=" https://github.com/CSSEGISandData/COVID-19">CSSE</a> (updated @hoursStr hours ago)'
 		},
 
 		yAxis: {

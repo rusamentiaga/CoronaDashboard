@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CoronaDashboard.Web.Services
 {
-	public class Covid19DeathsService : ICovid19DeathsService
+	public class ViewModelService : IViewModelService
 	{
 		public const int MIN_DEATHS = 10;
 		public const int MIN_DEATHS_MILLION = 1;
@@ -19,7 +19,10 @@ namespace CoronaDashboard.Web.Services
 		public const string NORM_POPULATION = "million";
 		public const string NORM_DENSITY = "people per sq. km";
 
-		ICovid19DeathsModelRepository _repository;
+		public const string DATA_CASES = "Cases";
+		public const string DATA_DEATHS = "Deaths";
+
+		IHopkinsModelRepository _repository;
 		IPopulationCountryService _countryService;
 
 		Dictionary<string, Func<PopulationCountry, double>> _normalizationStrategyMap;
@@ -27,7 +30,7 @@ namespace CoronaDashboard.Web.Services
 		private double NormalizationPopulation(PopulationCountry country) => POPULATION_SCALE / country.Population;
 		private double NormalizationDensity(PopulationCountry country) => DENSITY_SCALE / country.DensityPeoplePerSquareKm;
 
-		public Covid19DeathsService(ICovid19DeathsModelRepository repository, IPopulationCountryService countryService)
+		public ViewModelService(IHopkinsModelRepository repository, IPopulationCountryService countryService)
 		{
 			_repository = repository;
 			_countryService = countryService;
@@ -37,9 +40,9 @@ namespace CoronaDashboard.Web.Services
 			_normalizationStrategyMap[NORM_DENSITY] = NormalizationDensity;
 		}
 
-		public PlotViewModel GetAbsoluteDataViewModel()
+		public PlotViewModel GetAbsoluteDataViewModel(string metric)
 		{
-			Covid19DeathsModel model = _repository.GetCovid19DeathsModel();
+			HopkinsModel model = _repository.GetHopkinsModel(metric);
 
 			List<CountrySerieViewModel> series = new List<CountrySerieViewModel>();
 
@@ -73,9 +76,9 @@ namespace CoronaDashboard.Web.Services
 			};
 		}
 
-		public PlotViewModel GetRelativeViewModel(string option, int minDeathsValue = MIN_DEATHS_MILLION)
+		public PlotViewModel GetRelativeViewModel(string metric, string option, int minDeathsValue = MIN_DEATHS_MILLION)
 		{
-			Covid19DeathsModel model = _repository.GetCovid19DeathsModel();
+			HopkinsModel model = _repository.GetHopkinsModel(metric);
 
 			List<CountrySerieViewModel> series = new List<CountrySerieViewModel>();
 
@@ -115,9 +118,9 @@ namespace CoronaDashboard.Web.Services
 			};
 		}
 
-		public PlotViewModel GetGrowthViewModel()
+		public PlotViewModel GetGrowthViewModel(string metric)
 		{
-			Covid19DeathsModel model = _repository.GetCovid19DeathsModel();
+			HopkinsModel model = _repository.GetHopkinsModel(metric);
 
 			List<CountrySerieViewModel> series = new List<CountrySerieViewModel>();
 
@@ -158,9 +161,9 @@ namespace CoronaDashboard.Web.Services
 			};
 		}
 
-		public PlotViewModel GetRelativeGrowthViewModel(string option, int minDeathsValue = MIN_DEATHS_MILLION)
+		public PlotViewModel GetRelativeGrowthViewModel(string metric, string option, int minDeathsValue = MIN_DEATHS_MILLION)
 		{
-			Covid19DeathsModel model = _repository.GetCovid19DeathsModel();
+			HopkinsModel model = _repository.GetHopkinsModel(metric);
 
 			List<CountrySerieViewModel> series = new List<CountrySerieViewModel>();
 
@@ -209,10 +212,10 @@ namespace CoronaDashboard.Web.Services
 			};
 		}
 
-		public MapViewModel GetMapViewModel(string option)
+		public MapViewModel GetMapViewModel(string metric, string option)
 		{
-			Covid19DeathsModel model = _repository.GetCovid19DeathsModel();
-			PlotViewModel relativeModel = GetRelativeViewModel(option, 0);
+			HopkinsModel model = _repository.GetHopkinsModel(metric);
+			PlotViewModel relativeModel = GetRelativeViewModel(metric, option, 0);
 			List<MapCountryCodeModel> series = new List<MapCountryCodeModel>();
 
 			foreach (var itemRelative in relativeModel.Series)
@@ -258,12 +261,12 @@ namespace CoronaDashboard.Web.Services
 			return sortedList.Take(NUM_COUNTRY_BAR).ToList();
 		}
 
-		public TimelineViewModel GetTimeline(string option)
+		public TimelineViewModel GetTimeline(string metric, string option)
 		{
 			const int SecondsHour = 3600;
 			const string DateFormat = "MMMM dd yyyy";
 
-			Covid19DeathsModel model = _repository.GetCovid19DeathsModel();
+			HopkinsModel model = _repository.GetHopkinsModel(metric);
 
 			List<PeakDeaths> data = new List<PeakDeaths>();
 

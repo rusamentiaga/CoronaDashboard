@@ -25,19 +25,13 @@ namespace CoronaDashboard.Web
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.Configure<CookiePolicyOptions>(options =>
-			{
-				// This lambda determines whether user consent for non-essential cookies is needed for a given request.
-				options.CheckConsentNeeded = context => true;
-				options.MinimumSameSitePolicy = SameSiteMode.None;
-			});
-
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-			
-			services.AddTransient<ICovid19DeathsModelReader>(
-				s => new Covid19DeathsModelFileCacheReader(new Covid19DeathsModelDowloader()));
-			services.AddTransient<ICovid19DeathsModelRepository, Covid19DeathsModelRepositoryCsv>();
-			
+
+			services.AddTransient<IHopkinsModelReader, CasesModelReader>();
+			services.AddTransient<IHopkinsModelReader, DeathsModelReader>();
+
+			services.AddTransient<IHopkinsModelRepository, HopkinsModelRepositoryCsv>();
+
 			/*
 			services.AddTransient<ICovid19DeathsModelReader>(
 				s => new Covid19DeathsModelFileCacheReader(new EcdcModelDowloader(), "opendata.ecdc.europa.eu-covid19.json"));
@@ -47,7 +41,7 @@ namespace CoronaDashboard.Web
 			services.AddTransient<IPopulationCountryRepository, PopulationCountryRepositoryCsv>();
 			services.AddTransient<IPopulationCountryService, PopulationCountryService>();
 
-			services.AddTransient<ICovid19DeathsService, Covid19DeathsService>();
+			services.AddTransient<IViewModelService, ViewModelService>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,13 +57,12 @@ namespace CoronaDashboard.Web
 			}
 
 			app.UseStaticFiles();
-			//app.UseCookiePolicy();
 
 			app.UseMvc(routes =>
 			{
 				routes.MapRoute(
 					name: "default",
-					template: "{controller=Home}/{action=Relative}/{option?}");
+					template: "{controller=Home}/{Metric=" + ViewModelService.DATA_DEATHS + "}/{action=Absolute}/{option?}");
 			});
 		}
 	}

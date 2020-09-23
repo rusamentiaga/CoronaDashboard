@@ -54,12 +54,12 @@
 		},
 
 		title: {
-			text: 'Coronavirus deaths / million'
+			text: 'Coronavirus @ViewData["Metric"] / million'
 		},
 
 		subtitle: {
 			useHTML: true,
-			text: 'Data source: <a href=" https://github.com/CSSEGISandData/COVID-19">CSSEGISandData</a> (@Model.UpdateTime.ToString("u"), @hoursStr hours ago)'
+			text: 'Data source: <a href=" https://github.com/CSSEGISandData/COVID-19">CSSE</a> (updated @hoursStr hours ago)'
 		},
 
 		mapNavigation: {
@@ -125,7 +125,7 @@
 		series: [{
 			joinBy: ['iso-a3', 'code3'],
 			data: @Html.Raw(JsonConvert.SerializeObject(Model.Data)),
-			name: 'Deaths per million',
+			name: '@ViewData["Metric"] per million',
 			states: {
 				hover: {
 					color: '#BADA55'
