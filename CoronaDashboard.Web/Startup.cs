@@ -29,13 +29,14 @@ namespace CoronaDashboard.Web
 
 			services.AddTransient<IHopkinsModelReader, CasesModelReader>();
 			services.AddTransient<IHopkinsModelReader, DeathsModelReader>();
+			services.AddTransient<IHopkinsModelReader, RecoveredModelReader>();
 
 			services.AddTransient<IHopkinsModelRepository, HopkinsModelRepositoryCsv>();
 
 			/*
 			services.AddTransient<ICovid19DeathsModelReader>(
 				s => new Covid19DeathsModelFileCacheReader(new EcdcModelDowloader(), "opendata.ecdc.europa.eu-covid19.json"));
-			services.AddTransient<ICovid19DeathsModelRepository, EcdcModelRepositoryJson>();
+			services.AddTransient<IHopkinsModelRepository, EcdcModelRepositoryJson>();
 			*/
 
 			services.AddTransient<IPopulationCountryRepository, PopulationCountryRepositoryCsv>();
@@ -63,6 +64,9 @@ namespace CoronaDashboard.Web
 				routes.MapRoute(
 					name: "default",
 					template: "{controller=Home}/{Metric=" + ViewModelService.DATA_DEATHS + "}/{action=Absolute}/{option?}");
+				routes.MapRoute(
+					name: "error",
+					template: "{controller=Error}/{action=Index}");
 			});
 		}
 	}

@@ -28,9 +28,7 @@ namespace CoronaDashboard.Data
 
 		public HopkinsModel GetHopkinsModel(string metric)
 		{
-			IHopkinsModelReader reader = _readers.FirstOrDefault(o => o.GetType().Name.Contains(metric));
-			if (reader == null)
-				reader = _readers.First();
+			IHopkinsModelReader reader = _readers.First(o => o.GetType().Name.Contains(metric));
 
 			string csv = reader.GetRawModel();
 

@@ -5,12 +5,9 @@ namespace CoronaDashboard.Data
 {
 	public class HopkinsModelDowloader : IHopkinsModelReader
 	{
-		//const string FILE_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
 		const string API_URL = "https://api.github.com/repos/CSSEGISandData/COVID-19/commits?path=/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
 
-		const string FILE_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
-
-		const string BASE_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/";
+		const string FILE_BASE_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/";
 
 		private string _file;
 
@@ -31,7 +28,7 @@ namespace CoronaDashboard.Data
 
 				DateTime date = commits[0].commit.author.date;
 
-				string fileURL = BASE_URL + _file;
+				string fileURL = FILE_BASE_URL + _file;
 
 				string content = wc.DownloadString(fileURL);
 

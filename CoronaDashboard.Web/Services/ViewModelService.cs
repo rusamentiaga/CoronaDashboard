@@ -324,7 +324,7 @@ namespace CoronaDashboard.Web.Services
 								label = country,
 								max = maxDeathsDaily,
 								date = peakDateStr,
-								description = $"{maxDeathsDaily} deaths - {peakDateStr}"
+								description = $"{maxDeathsDaily} {metric} - {peakDateStr}"
 							};
 							data.Add(item);
 						}

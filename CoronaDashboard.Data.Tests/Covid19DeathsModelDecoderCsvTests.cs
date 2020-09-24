@@ -30,7 +30,7 @@ namespace CoronaDashboard.Data.Tests
 			IEnumerable<IHopkinsModelReader> readers = new List<IHopkinsModelReader> { reader };
 			HopkinsModelRepositoryCsv decoder = new HopkinsModelRepositoryCsv(readers);
 
-			HopkinsModel model = decoder.GetHopkinsModel("Deaths");
+			HopkinsModel model = decoder.GetHopkinsModel("HopkinsModelFileReader");
 
 			CollectionAssert.AreEqual(model.MapCountryDeaths["Spain"], expected);
 		}
