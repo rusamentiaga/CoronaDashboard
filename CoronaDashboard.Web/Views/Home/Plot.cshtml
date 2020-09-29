@@ -16,7 +16,7 @@
 	<div id="plot"></div>
 </figure>
 
-<div id="ChartType" class="btn-group btn-group-toggle" data-toggle="buttons">
+<div id="ChartType" style="float:left;" class="btn-group btn-group-toggle" data-toggle="buttons">
 	<label class="btn active">
 		<input type="radio" name="mode" id="linearRadio" checked> Linear
 	</label>
@@ -24,6 +24,13 @@
 		<input type="radio" name="mode" id="logarithmicRadio"> Logarithmic
 	</label>
 </div>
+
+<div style="float:right;">
+	<button type="button" class="btn btn-secondary" id="America">America</button>
+	<button type="button" class="btn btn-secondary" id="Europe">Europe</button>
+	<button type="button" class="btn btn-secondary" id="All">All</button>
+</div>
+<div style="clear: both;"></div>
 
 <figure class="highcharts-figure-last">
 	<div id="bar"></div>
@@ -150,6 +157,37 @@
 
 	});
 
+	function ShowCountries(countries) {
+		var series = chartPlot.series;
+		for (var i = 0; i < series.length; i++) {
+
+			if (countries.indexOf(series[i].name) >= 0) {
+				series[i].setVisible(true, false);
+			}
+			else {
+				series[i].setVisible(false, false);
+			}
+		}
+		chartPlot.redraw();
+	}
+
+	$("#America").on('click', function () {
+		var AmericaList = ["Argentina", "Bolivia", "Brazil", "Canada", "Chile", "Colombia", "Cuba", "Ecuador", "Guatemala", "Haiti", "Mexico", "Peru", "US", "Venezuela"];
+		ShowCountries(AmericaList);
+	});
+
+	$("#Europe").on('click', function () {
+		var EuropeList = ["Spain", "France", "Belgium", "Germany", "Greece", "Italy", "Netherlands", "Poland", "Portugal", "Romania", "Russia", "Sweden", "Ukraine", "United Kingdom"];
+		ShowCountries(EuropeList);
+	});
+
+	$("#All").on('click', function () {
+		$(chartPlot.series).each(function () {
+			this.setVisible(true, false);
+		});
+		chartPlot.redraw();
+	});
+
 	chartBar = Highcharts.chart('bar', {
 		chart: {
 			height: 300,
@@ -194,12 +232,12 @@
 				}
 			}
 		},
-		
+
 		tooltip: {
 			headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
 			pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.@ViewData["TooltipDecimals"]f}</b><br/>'
 		},
-		
+
 		series: [
 			{
 				name: '@Html.Raw(ViewData["YLabel"])',
