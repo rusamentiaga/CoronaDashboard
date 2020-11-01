@@ -50,3 +50,7 @@ body {
 	height: 600px;
 	margin: 0 auto;
 }
+
+.navbarbrand-active {
+	color: #337ab7 !important;
+}

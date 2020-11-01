@@ -23,9 +23,24 @@
 		<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 	</environment>
 </head>
+
+@{
+	var metric = ViewData["Metric"] as String;
+	string deathsClass = metric == "Deaths" ? "navbarbrand-active" : "";
+	string casesClass = metric == "Cases" ? "navbarbrand-active" : "";
+
+	var method = ViewData["Method"] as String;
+	string absoluteActive = method == "Absolute" ? "active" : "";
+	string relativeActive = method == "Relative" ? "active" : "";
+	string growthActive = method == "Growth" ? "active" : "";
+	string growthRelativeActive = method == "GrowthRelative" ? "active" : "";
+	string mapActive = method == "Map" ? "active" : "";
+	string timelineActive = method == "Timeline" ? "active" : "";
+}
+
 <body>
-    <nav class="navbar navbar-light navbar-inverse navbar-fixed-top">
-        <div class="container">
+	<nav class="navbar navbar-light navbar-inverse navbar-fixed-top">
+		<div class="container">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
 					<span class="sr-only">Toggle navigation</span>
@@ -35,54 +50,54 @@
 				</button>
 			</div>
 			<div class="navbar-collapse collapse">
-				<a class="navbar-brand" asp-controller="Home" asp-action="Absolute" asp-route-metric='Deaths'>Deaths</a>
-				<a class="navbar-brand" asp-controller="Home" asp-action="Absolute" asp-route-metric='Cases'>Cases</a>
+				<a class='navbar-brand @deathsClass' asp-controller="Home" asp-action="Absolute" asp-route-metric='Deaths'>Deaths</a>
+				<a class='navbar-brand @casesClass' asp-controller="Home" asp-action="Absolute" asp-route-metric='Cases'>Cases</a>
 				<ul class="nav navbar-nav">
-					<li><a asp-area="" asp-controller="Home" asp-action="Absolute" asp-route-option='linear'>@ViewData["Metric"]</a></li>
-					<li><a asp-area="" asp-controller="Home" asp-action="Relative" asp-route-option='@ViewModelService.NORM_POPULATION'>@ViewData["Metric"] / population</a></li>
-					<li><a asp-area="" asp-controller="Home" asp-action="Relative" asp-route-option='@ViewModelService.NORM_DENSITY'>@ViewData["Metric"] / density</a></li>
-					<li><a asp-area="" asp-controller="Home" asp-action="Growth" asp-route-option='linear'>@ViewData["Metric"] per day</a></li>
-					<li><a asp-area="" asp-controller="Home" asp-action="GrowthRelative" asp-route-option='@ViewModelService.NORM_POPULATION'>@ViewData["Metric"] per day / population</a></li>
-					<li><a asp-area="" asp-controller="Home" asp-action="Map" asp-route-option='@ViewModelService.NORM_POPULATION'>@ViewData["Metric"] Map</a></li>
-					<li><a asp-area="" asp-controller="Home" asp-action="Timeline" asp-route-option='@ViewModelService.NORM_POPULATION'>@ViewData["Metric"] Peaks</a></li>
+					<li class='nav-item @absoluteActive'><a asp-controller="Home" asp-action="Absolute" asp-route-option='linear'>@ViewData["Metric"]</a></li>
+					<li class='nav-item @relativeActive'><a asp-controller="Home" asp-action="Relative" asp-route-option='@ViewModelService.NORM_POPULATION'>@ViewData["Metric"] / population</a></li>
+					<!--
+					<li class="nav-item"><a asp-controller="Home" asp-action="Relative" asp-route-option='@ViewModelService.NORM_DENSITY'>@ViewData["Metric"] / density</a></liclass="nav-item">
+					-->
+					<li class='nav-item @growthActive'><a asp-controller="Home" asp-action="Growth" asp-route-option='linear'>@ViewData["Metric"] per day</a></li>
+					<li class='nav-item @growthRelativeActive'><a asp-controller="Home" asp-action="GrowthRelative" asp-route-option='@ViewModelService.NORM_POPULATION'>@ViewData["Metric"] per day / population</a></li>
+					<li class='nav-item @mapActive'><a asp-controller="Home" asp-action="Map" asp-route-option='@ViewModelService.NORM_POPULATION'>@ViewData["Metric"] Map</a></li>
+					<li class='nav-item @timelineActive'><a asp-controller="Home" asp-action="Timeline" asp-route-option='@ViewModelService.NORM_POPULATION'>@ViewData["Metric"] Peaks</a></li>
 				</ul>
 			</div>
-        </div>
-    </nav>
-
-    <partial name="_CookieConsentPartial" />
+		</div>
+	</nav>
 
 	<div class="container body-content">
 		@RenderBody()
 		<hr />
 		<footer>
 			<!--
-	<p>2020 - RUF</p>
-		-->
+			<p>2020 - RUF</p>
+				-->
 		</footer>
 	</div>
 
-    <environment include="Development">
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
-    </environment>
-    <environment exclude="Development">
-        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
-                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
-                asp-fallback-test="window.jQuery"
-                crossorigin="anonymous"
-                integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
-        </script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
-                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
-                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
-                crossorigin="anonymous"
-                integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd">
-        </script>
-        <script src="~/js/site.min.js" asp-append-version="true"></script>
-    </environment>
+	<environment include="Development">
+		<script src="~/lib/jquery/dist/jquery.js"></script>
+		<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+		<script src="~/js/site.js" asp-append-version="true"></script>
+	</environment>
+	<environment exclude="Development">
+		<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
+				asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+				asp-fallback-test="window.jQuery"
+				crossorigin="anonymous"
+				integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
+		</script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+				asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+				asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+				crossorigin="anonymous"
+				integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd">
+		</script>
+		<script src="~/js/site.min.js" asp-append-version="true"></script>
+	</environment>
 
-    @RenderSection("Scripts", required: false)
+	@RenderSection("Scripts", required: false)
 </body>
 </html>

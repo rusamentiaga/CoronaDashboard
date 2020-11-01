@@ -14,7 +14,7 @@ namespace CoronaDashboard.Web.Services
 		private const int MIN_POPULATION = 10000000;
 		private const int POPULATION_SCALE = 1000000;
 		private const int DENSITY_SCALE = 1;
-		private const int NUM_COUNTRY_BAR = 20;
+		private const int NUM_COUNTRY_BAR = 50;
 
 		public const string NORM_POPULATION = "million";
 		public const string NORM_DENSITY = "people per sq. km";
@@ -258,7 +258,8 @@ namespace CoronaDashboard.Web.Services
 			}
 			List<CountryValue> sortedList = lastValues.OrderByDescending(o => o.y).ToList();
 
-			return sortedList.Take(NUM_COUNTRY_BAR).ToList();
+//			return sortedList.Take(NUM_COUNTRY_BAR).ToList();
+			return sortedList.ToList();
 		}
 
 		public TimelineViewModel GetTimeline(string metric, string option)

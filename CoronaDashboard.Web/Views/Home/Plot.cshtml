@@ -131,62 +131,7 @@
 		}
 	});
 
-	function ChangeChartType(option) {
-		chartPlot.update({
-			yAxis: {
-				type: option
-			}
-		});
-		chartBar.update({
-			yAxis: {
-				type: option
-			}
-		});
-	}
-
-	$("#ChartType .btn").on('click', function () {
-
-		$(this).parent().children().removeClass('active');
-		$(this).addClass('active');
-
-		ChangeChartType($(this).text().toLowerCase().trim());
-
-		//console.log($(this).text().toLowerCase().trim());
-
-		//console.log(this); // points to the clicked input button
-
-	});
-
-	function ShowCountries(countries) {
-		var series = chartPlot.series;
-		for (var i = 0; i < series.length; i++) {
-
-			if (countries.indexOf(series[i].name) >= 0) {
-				series[i].setVisible(true, false);
-			}
-			else {
-				series[i].setVisible(false, false);
-			}
-		}
-		chartPlot.redraw();
-	}
-
-	$("#America").on('click', function () {
-		var AmericaList = ["Argentina", "Bolivia", "Brazil", "Canada", "Chile", "Colombia", "Cuba", "Ecuador", "Guatemala", "Haiti", "Mexico", "Peru", "US", "Venezuela"];
-		ShowCountries(AmericaList);
-	});
-
-	$("#Europe").on('click', function () {
-		var EuropeList = ["Spain", "France", "Belgium", "Germany", "Greece", "Italy", "Netherlands", "Poland", "Portugal", "Romania", "Russia", "Sweden", "Ukraine", "United Kingdom"];
-		ShowCountries(EuropeList);
-	});
-
-	$("#All").on('click', function () {
-		$(chartPlot.series).each(function () {
-			this.setVisible(true, false);
-		});
-		chartPlot.redraw();
-	});
+	let seriesLast = @Html.Raw(JsonConvert.SerializeObject(Model.SeriesLast));
 
 	chartBar = Highcharts.chart('bar', {
 		chart: {
@@ -242,9 +187,79 @@
 			{
 				name: '@Html.Raw(ViewData["YLabel"])',
 				colorByPoint: false,
-				data: @Html.Raw(JsonConvert.SerializeObject(Model.SeriesLast))
+				data: seriesLast
 			}
 		]
 
 	});
+
+	function ChangeChartType(option) {
+		chartPlot.update({
+			yAxis: {
+				type: option
+			}
+		});
+		chartBar.update({
+			yAxis: {
+				type: option
+			}
+		});
+	}
+
+	$("#ChartType .btn").on('click', function () {
+
+		$(this).parent().children().removeClass('active');
+		$(this).addClass('active');
+
+		ChangeChartType($(this).text().toLowerCase().trim());
+
+		//console.log($(this).text().toLowerCase().trim());
+
+		//console.log(this); // points to the clicked input button
+
+	});
+
+	function ShowCountries(countries) {
+		var series = chartPlot.series;
+		for (var i = 0; i < series.length; i++) {
+
+			if (countries.indexOf(series[i].name) >= 0) {
+				series[i].setVisible(true, false);
+			}
+			else {
+				series[i].setVisible(false, false);
+			}
+		}
+		chartPlot.redraw();
+
+		let seriesLastFilter = seriesLast.slice().filter(country => countries.indexOf(country.name) >= 0);
+
+		chartBar.series[0].update({
+			data: seriesLastFilter
+		}, true); //true / false to redraw
+	}
+
+	$("#America").on('click', function () {
+		var AmericaList = ["Argentina", "Bolivia", "Brazil", "Canada", "Chile", "Colombia", "Cuba", "Ecuador", "Guatemala", "Haiti", "Mexico", "Peru", "US", "Venezuela"];
+		ShowCountries(AmericaList);
+	});
+
+	$("#Europe").on('click', function () {
+		var EuropeList = ["Spain", "Czechia", "France", "Belgium", "Germany", "Greece", "Italy", "Netherlands", "Poland", "Portugal", "Romania", "Russia", "Sweden", "Ukraine", "United Kingdom"];
+		ShowCountries(EuropeList);
+	});
+
+	$("#All").on('click', function () {
+		$(chartPlot.series).each(function () {
+			this.setVisible(true, false);
+		});
+		chartPlot.redraw();
+
+		chartBar.series[0].update({
+			data: seriesLast
+		}, true); //true / false to redraw
+	});
+
+
+
 </script>

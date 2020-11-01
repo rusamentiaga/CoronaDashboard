@@ -26,6 +26,7 @@ namespace CoronaDashboard.Web.Controllers
 			TimelineViewModel model = _covidService.GetTimeline(metric, option);
 
 			ViewData["Metric"] = metric;
+			ViewData["Method"] = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
 			return View(model);
 		}
@@ -35,6 +36,7 @@ namespace CoronaDashboard.Web.Controllers
 			MapViewModel model = _covidService.GetMapViewModel(metric, option);
 
 			ViewData["Metric"] = metric;
+			ViewData["Method"] = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
 			return View(model);
 		}
@@ -44,6 +46,7 @@ namespace CoronaDashboard.Web.Controllers
 			PlotViewModel model = _covidService.GetGrowthViewModel(metric);
 
 			ViewData["Metric"] = metric;
+			ViewData["Method"] = System.Reflection.MethodBase.GetCurrentMethod().Name;
 			ViewData["Title"] = "Growth";
 			ViewData["YLabel"] = metric + " per day";
 			ViewData["TooltipDecimals"] = 0;
@@ -61,6 +64,7 @@ namespace CoronaDashboard.Web.Controllers
 				ViewModelService.MIN_DEATHS_MILLION);
 
 			ViewData["Metric"] = metric;
+			ViewData["Method"] = System.Reflection.MethodBase.GetCurrentMethod().Name;
 			ViewData["Title"] = "Growth relative";
 			ViewData["YLabel"] = metric + " per day / million";
 			ViewData["TooltipDecimals"] = 1;
@@ -77,6 +81,7 @@ namespace CoronaDashboard.Web.Controllers
 			PlotViewModel model = _covidService.GetAbsoluteDataViewModel(metric);
 
 			ViewData["Metric"] = metric;
+			ViewData["Method"] = System.Reflection.MethodBase.GetCurrentMethod().Name;
 			ViewData["Title"] = "Absolute";
 			ViewData["YLabel"] = metric;
 			ViewData["TooltipDecimals"] = 0;
@@ -101,6 +106,7 @@ namespace CoronaDashboard.Web.Controllers
 			PlotViewModel model = _covidService.GetRelativeViewModel(metric, option, ViewModelService.MIN_DEATHS_MILLION);
 
 			ViewData["Metric"] = metric;
+			ViewData["Method"] = System.Reflection.MethodBase.GetCurrentMethod().Name;
 			ViewData["Title"] = "Relative";
 			ViewData["YLabel"] = metric + " / " + option;
 			ViewData["TooltipDecimals"] = 2;
