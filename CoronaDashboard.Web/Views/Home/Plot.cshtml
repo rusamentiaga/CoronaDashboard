@@ -16,6 +16,7 @@
 	<div id="plot"></div>
 </figure>
 
+<!--
 <div id="ChartType" style="float:left;" class="btn-group btn-group-toggle" data-toggle="buttons">
 	<label class="btn active">
 		<input type="radio" name="mode" id="linearRadio" checked> Linear
@@ -24,6 +25,7 @@
 		<input type="radio" name="mode" id="logarithmicRadio"> Logarithmic
 	</label>
 </div>
+-->
 
 <div style="float:right;">
 	<button type="button" class="btn btn-secondary" id="America">America</button>
@@ -82,20 +84,20 @@
 		},
 
 		yAxis: {
-			//min: @ViewData["YMin"],
 			type: '@ViewData["YType"]',
-			//tickInterval: @ViewData["YTickInterval"],
-			//minorTickInterval: 0.1,
 			title: {
 				text: '@Html.Raw(ViewData["YLabel"])'
 			}
 		},
 
 		xAxis: {
+			/*
 			allowDecimals: false,
 			title: {
 				text: '@Html.Raw(ViewData["XLabel"])'
-			}
+			},
+		*/
+			type: 'datetime',
 		},
 
 		legend: {
@@ -109,8 +111,9 @@
 				label: {
 					connectorAllowed: false
 				},
-				pointStart: 0
-			}
+				pointInterval: 1000 * 3600 * 24,
+				pointStart: Date.UTC(2020, 0, 22, 0, 0, 0)
+			},
 		},
 
 		series: @Html.Raw(JsonConvert.SerializeObject(Model.Series)),

@@ -9,8 +9,8 @@ namespace CoronaDashboard.Web.Services
 {
 	public class ViewModelService : IViewModelService
 	{
-		public const int MIN_DEATHS = 10;
-		public const int MIN_DEATHS_MILLION = 1;
+		public const int MIN_DEATHS = 0;
+		public const int MIN_DEATHS_MILLION = 0;
 		private const int MIN_POPULATION = 10000000;
 		private const int POPULATION_SCALE = 1000000;
 		private const int DENSITY_SCALE = 1;
@@ -55,14 +55,14 @@ namespace CoronaDashboard.Web.Services
 
 				PopulationCountry countryPop = _countryService.GetCountry(country, model.GetCountryIsoCode(country));
 
-				if ((max > MIN_DEATHS) && (countryPop != null))
+				if ((max >= MIN_DEATHS) && (countryPop != null))
 				{
 					if (countryPop.Population > MIN_POPULATION)
 					{
 						var item = new CountrySerieViewModel
 						{
 							name = country,
-							data = data.Where(d => d > MIN_DEATHS).ToList()
+							data = data.Where(d => d >= MIN_DEATHS).ToList()
 						};
 						series.Add(item);
 					}
@@ -92,7 +92,7 @@ namespace CoronaDashboard.Web.Services
 				var normalizationStrategy = _normalizationStrategyMap[option];
 				PopulationCountry populationCountry = _countryService.GetCountry(country, model.GetCountryIsoCode(country));
 
-				if ((maxDeaths > MIN_DEATHS) && (populationCountry != null))
+				if ((maxDeaths >= MIN_DEATHS) && (populationCountry != null))
 				{
 					if (populationCountry.Population > MIN_POPULATION)
 					{
@@ -103,7 +103,7 @@ namespace CoronaDashboard.Web.Services
 						var item = new CountrySerieViewModel
 						{
 							name = country,
-							data = deathsCountry.Where(d => d > minDeathsValue).ToList()
+							data = deathsCountry.Where(d => d >= minDeathsValue).ToList()
 						};
 						if (deathsCountry.Count > 0)
 							series.Add(item);
@@ -129,11 +129,11 @@ namespace CoronaDashboard.Web.Services
 				List<int> deaths = model.MapCountryDeaths[country];
 				double maxDeaths = deaths.Max();
 
-				deaths = deaths.Where(d => d > MIN_DEATHS).ToList();
+				deaths = deaths.Where(d => d >= MIN_DEATHS).ToList();
 
 				PopulationCountry populationCountry = _countryService.GetCountry(country, model.GetCountryIsoCode(country));
 
-				if ((maxDeaths > MIN_DEATHS) && (deaths.Count > 1) && (populationCountry != null))
+				if ((maxDeaths >= MIN_DEATHS) && (deaths.Count > 1) && (populationCountry != null))
 				{
 					if (populationCountry.Population > MIN_POPULATION)
 					{
@@ -176,9 +176,9 @@ namespace CoronaDashboard.Web.Services
 				var normalizationStrategy = _normalizationStrategyMap[option];
 				PopulationCountry populationCountry = _countryService.GetCountry(country, model.GetCountryIsoCode(country));
 
-				deathsCountry = deathsCountry.Where(d => d > MIN_DEATHS).ToList();
+				deathsCountry = deathsCountry.Where(d => d >= MIN_DEATHS).ToList();
 
-				if ((maxDeaths > MIN_DEATHS) && (populationCountry != null) && (deathsCountry.Count > 1))
+				if ((maxDeaths >= MIN_DEATHS) && (populationCountry != null) && (deathsCountry.Count > 1))
 				{
 					if (populationCountry.Population > MIN_POPULATION)
 					{
@@ -282,7 +282,7 @@ namespace CoronaDashboard.Web.Services
 
 				PopulationCountry populationCountry = _countryService.GetCountry(country, model.GetCountryIsoCode(country));
 
-				if ((maxDeaths > MIN_DEATHS) && (populationCountry != null) && (deathsCountry.Count > 1))
+				if ((maxDeaths >= MIN_DEATHS) && (populationCountry != null) && (deathsCountry.Count > 1))
 				{
 					if (populationCountry.Population > MIN_POPULATION)
 					{
@@ -297,7 +297,7 @@ namespace CoronaDashboard.Web.Services
 						int maxDeathsDaily = dataDaily.Max();
 						int maxIndexDaily = dataDaily.IndexOf(maxDeathsDaily);
 
-						if (maxDeathsDaily > MIN_DEATHS)
+						if (maxDeathsDaily >= MIN_DEATHS)
 						{
 							DateTime peakDate;
 
