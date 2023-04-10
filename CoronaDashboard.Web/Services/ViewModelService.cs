@@ -118,6 +118,27 @@ namespace CoronaDashboard.Web.Services
 			};
 		}
 
+		public double[] Convolve(double[] a, double[] kernel)
+		{
+			double[] result;
+			int m = (int)System.Math.Ceiling(kernel.Length / 2.0);
+
+			result = new double[a.Length];
+
+			for (int i = 0; i < result.Length; i++)
+			{
+				result[i] = 0;
+				for (int j = 0; j < kernel.Length; j++)
+				{
+					int k = i - j + m - 1;
+					if (k >= 0 && k < a.Length)
+						result[i] += a[k] * kernel[j];
+				}
+			}
+
+			return result;
+		}
+
 		public PlotViewModel GetGrowthViewModel(string metric)
 		{
 			HopkinsModel model = _repository.GetHopkinsModel(metric);

@@ -51,6 +51,7 @@
 		colorpal[i] = '#' + colorpal[i];
 	}
 
+	Highcharts.seriesTypes.line.prototype.getPointSpline = Highcharts.seriesTypes.spline.prototype.getPointSpline;
 	var chartPlot = Highcharts.chart('plot', {
 
 		colors: colorpal,
@@ -59,7 +60,8 @@
 			height: 600,
 			zoomType: "xy",
 			panning: true,
-			panKey: 'shift'
+			panKey: 'shift',
+			//type: 'spline'
 		},
 		tooltip: {
 			pointFormat: '{series.name}: <b>{point.y:.@ViewData["TooltipDecimals"]f}</b><br/>',

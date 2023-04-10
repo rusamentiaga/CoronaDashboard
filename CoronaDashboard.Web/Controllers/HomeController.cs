@@ -45,6 +45,26 @@ namespace CoronaDashboard.Web.Controllers
 		{
 			PlotViewModel model = _covidService.GetGrowthViewModel(metric);
 
+			/*
+			List<CountrySerieViewModel> series = new List<CountrySerieViewModel>();
+			double[] kernel = new double[] { 1, 1, 1, 1, 1, };
+			foreach (CountrySerieViewModel seriesItem in model.Series)
+			{
+				var itemFiltered = new CountrySerieViewModel
+				{
+					name = seriesItem.name,
+					data = Convolve(seriesItem.data.ToArray(), kernel).ToList()
+				};
+				series.Add(itemFiltered);
+			}
+			model = new PlotViewModel
+			{
+				Series = series,
+				UpdateTime = model.UpdateTime,
+				SeriesLast = model.SeriesLast
+			};
+			*/
+
 			ViewData["Metric"] = metric;
 			ViewData["Method"] = System.Reflection.MethodBase.GetCurrentMethod().Name;
 			ViewData["Title"] = "Growth";
@@ -75,6 +95,28 @@ namespace CoronaDashboard.Web.Controllers
 
 			return View("Plot", model);
 		}
+
+		public double[] Convolve(double[] a, double[] kernel)
+		{
+			double[] result;
+			int m = (int)System.Math.Ceiling(kernel.Length / 2.0);
+
+			result = new double[a.Length];
+
+			for (int i = 0; i < result.Length; i++)
+			{
+				result[i] = 0;
+				for (int j = 0; j < kernel.Length; j++)
+				{
+					int k = i - j + m - 1;
+					if (k >= 0 && k < a.Length)
+						result[i] += a[k] * kernel[j];
+				}
+			}
+
+			return result;
+		}
+
 
 		public IActionResult Absolute(string metric, string option)
 		{
